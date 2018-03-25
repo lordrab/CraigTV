@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="943f1ab22a9742ab865eb3f7338b681f" Name="Diagram1">
+        <EntityTypeShape EntityType="SuperBobModel.Answer" Width="1.5" PointX="10.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Login" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.LoginClaim" Width="1.5" PointX="2.875" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.LoginSocialMedia" Width="1.5" PointX="4.625" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Person" Width="1.5" PointX="7.375" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Question" Width="1.5" PointX="8.75" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Role" Width="1.5" PointX="2.625" PointY="5" IsExpanded="true" />
+        <AssociationConnector Association="SuperBobModel.FK_Answer_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_Answer_Question" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_Person_Login" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_Question_Person" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.LoginRole" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
