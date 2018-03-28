@@ -54,8 +54,12 @@ namespace SuperBob.App_Start
 
                 kernel.Bind<DbContext>().To<SuperBobEntities>();
                 kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
-                kernel.Bind<IQuestionService>().To<QuestionService>();
-                kernel.Bind<IRepository<Question>>().To<Repository<Question>>();
+                kernel.Bind<IUserService>().To<UserService>();
+                kernel.Bind<IRepository<Person>>().To<Repository<Person>>();
+                kernel.Bind<IRepository<VideoLibrary>>().To <Repository<VideoLibrary>>();
+                kernel.Bind<IVideoLibraryService>().To<VideoLibraryService>();
+                kernel.Bind<IRepository<Genre>>().To<Repository<Genre>>();
+                kernel.Bind<IGenreService>().To<GenreService>();
                 
                // RegisterServices(kernel);
                 return kernel;

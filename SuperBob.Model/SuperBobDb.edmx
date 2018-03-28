@@ -4,16 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SuperBobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Answer">
+    <Schema Namespace="SuperBobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Genre">
           <Key>
-            <PropertyRef Name="AnswerId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="AnswerId" Type="int" Nullable="false" />
-          <Property Name="Answer" Type="text" Nullable="false" />
-          <Property Name="QuestionId" Type="int" Nullable="false" />
-          <Property Name="PersonId" Type="int" Nullable="false" />
-          <Property Name="Posted" Type="datetime" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -61,22 +58,11 @@
         </EntityType>
         <EntityType Name="Person">
           <Key>
-            <PropertyRef Name="PersonId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="FirstName" Type="nchar" MaxLength="30" Nullable="false" />
           <Property Name="LastName" Type="nchar" MaxLength="30" Nullable="false" />
-          <Property Name="NickName" Type="nchar" MaxLength="30" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="QuestionId" />
-          </Key>
-          <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="nchar" MaxLength="30" Nullable="false" />
-          <Property Name="QuestionBody" Type="text" Nullable="false" />
-          <Property Name="Posted" Type="datetime" Nullable="false" />
-          <Property Name="PersonId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -85,30 +71,16 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Answer_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="PersonId" />
-            </Principal>
-            <Dependent Role="Answer">
-              <PropertyRef Name="PersonId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Answer_Question">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="QuestionId" />
-            </Principal>
-            <Dependent Role="Answer">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <EntityType Name="VideoLibrary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="FileName" Type="nchar" MaxLength="200" Nullable="false" />
+          <Property Name="GenreId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nchar" MaxLength="200" />
+        </EntityType>
         <Association Name="FK_dbo_LoginClaim_dbo_Login_LoginId">
           <End Role="Login" Type="Self.Login" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -173,39 +145,31 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Person">
-              <PropertyRef Name="PersonId" />
+              <PropertyRef Name="Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Question_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+        <Association Name="FK_VideoLibrary_Genre">
+          <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
+          <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="PersonId" />
+            <Principal Role="Genre">
+              <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="PersonId" />
+            <Dependent Role="VideoLibrary">
+              <PropertyRef Name="GenreId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="SuperBobModelStoreContainer">
-          <EntitySet Name="Answer" EntityType="Self.Answer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Genre" EntityType="Self.Genre" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginClaim" EntityType="Self.LoginClaim" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginRole" EntityType="Self.LoginRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginSocialMedia" EntityType="Self.LoginSocialMedia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Answer_Person" Association="Self.FK_Answer_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Answer" EntitySet="Answer" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Answer_Question" Association="Self.FK_Answer_Question">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="Answer" EntitySet="Answer" />
-          </AssociationSet>
+          <EntitySet Name="VideoLibrary" EntityType="Self.VideoLibrary" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_dbo_LoginClaim_dbo_Login_LoginId" Association="Self.FK_dbo_LoginClaim_dbo_Login_LoginId">
             <End Role="Login" EntitySet="Login" />
             <End Role="LoginClaim" EntitySet="LoginClaim" />
@@ -226,28 +190,44 @@
             <End Role="Login" EntitySet="Login" />
             <End Role="Person" EntitySet="Person" />
           </AssociationSet>
-          <AssociationSet Name="FK_Question_Person" Association="Self.FK_Question_Person">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Question" EntitySet="Question" />
+          <AssociationSet Name="FK_VideoLibrary_Genre" Association="Self.FK_VideoLibrary_Genre">
+            <End Role="Genre" EntitySet="Genre" />
+            <End Role="VideoLibrary" EntitySet="VideoLibrary" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SuperBobModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Answer">
-          <Key>
-            <PropertyRef Name="AnswerId" />
-          </Key>
-          <Property Name="AnswerId" Type="Int32" Nullable="false" />
-          <Property Name="Answer1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="QuestionId" Type="Int32" Nullable="false" />
-          <Property Name="PersonId" Type="Int32" Nullable="false" />
-          <Property Name="Posted" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Answer_Person" FromRole="Answer" ToRole="Person" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_Answer_Question" FromRole="Answer" ToRole="Question" />
-        </EntityType>
+        <EntityContainer Name="SuperBobEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Logins" EntityType="SuperBobModel.Login" />
+          <EntitySet Name="LoginClaims" EntityType="SuperBobModel.LoginClaim" />
+          <EntitySet Name="LoginSocialMedias" EntityType="SuperBobModel.LoginSocialMedia" />
+          <EntitySet Name="People" EntityType="SuperBobModel.Person" />
+          <EntitySet Name="Roles" EntityType="SuperBobModel.Role" />
+          <AssociationSet Name="FK_dbo_LoginClaim_dbo_Login_LoginId" Association="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginClaim" EntitySet="LoginClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_LoginSocialMedia_dbo_Login_LoginId" Association="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginSocialMedia" EntitySet="LoginSocialMedias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_Login" Association="SuperBobModel.FK_Person_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="LoginRole" Association="SuperBobModel.LoginRole">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <EntitySet Name="Genres" EntityType="SuperBobModel.Genre" />
+          <EntitySet Name="VideoLibraries" EntityType="SuperBobModel.VideoLibrary" />
+          <AssociationSet Name="FK_VideoLibrary_Genre" Association="SuperBobModel.FK_VideoLibrary_Genre">
+            <End Role="Genre" EntitySet="Genres" />
+            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Login">
           <Key>
             <PropertyRef Name="Id" />
@@ -263,11 +243,11 @@
           <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="LoginClaims" Relationship="Self.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="Login" ToRole="LoginClaim" />
-          <NavigationProperty Name="LoginSocialMedias" Relationship="Self.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="Login" ToRole="LoginSocialMedia" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Person_Login" FromRole="Login" ToRole="Person" />
-          <NavigationProperty Name="Roles" Relationship="Self.LoginRole" FromRole="Login" ToRole="Role" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="LoginClaims" Relationship="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="Login" ToRole="LoginClaim" />
+          <NavigationProperty Name="LoginSocialMedias" Relationship="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="Login" ToRole="LoginSocialMedia" />
+          <NavigationProperty Name="Person" Relationship="SuperBobModel.FK_Person_Login" FromRole="Login" ToRole="Person" />
+          <NavigationProperty Name="Roles" Relationship="SuperBobModel.LoginRole" FromRole="Login" ToRole="Role" />
         </EntityType>
         <EntityType Name="LoginClaim">
           <Key>
@@ -277,7 +257,7 @@
           <Property Name="LoginId" Type="Int32" Nullable="false" />
           <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Login" Relationship="Self.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="LoginClaim" ToRole="Login" />
+          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="LoginClaim" ToRole="Login" />
         </EntityType>
         <EntityType Name="LoginSocialMedia">
           <Key>
@@ -285,72 +265,33 @@
             <PropertyRef Name="ProviderKey" />
             <PropertyRef Name="LoginId" />
           </Key>
-          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="LoginId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Login" Relationship="Self.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="LoginSocialMedia" ToRole="Login" />
+          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="LoginSocialMedia" ToRole="Login" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
-            <PropertyRef Name="PersonId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="PersonId" Type="Int32" Nullable="false" />
-          <Property Name="FirstName" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="NickName" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Answers" Relationship="Self.FK_Answer_Person" FromRole="Person" ToRole="Answer" />
-          <NavigationProperty Name="Login" Relationship="Self.FK_Person_Login" FromRole="Person" ToRole="Login" />
-          <NavigationProperty Name="Questions" Relationship="Self.FK_Question_Person" FromRole="Person" ToRole="Question" />
-        </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="QuestionId" />
-          </Key>
-          <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="QuestionBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Posted" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PersonId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Answers" Relationship="Self.FK_Answer_Question" FromRole="Question" ToRole="Answer" />
-          <NavigationProperty Name="Person" Relationship="Self.FK_Question_Person" FromRole="Question" ToRole="Person" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_Person_Login" FromRole="Person" ToRole="Login" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Logins" Relationship="Self.LoginRole" FromRole="Role" ToRole="Login" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Logins" Relationship="SuperBobModel.LoginRole" FromRole="Role" ToRole="Login" />
         </EntityType>
-        <Association Name="FK_Answer_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="PersonId" />
-            </Principal>
-            <Dependent Role="Answer">
-              <PropertyRef Name="PersonId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Answer_Question">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="QuestionId" />
-            </Principal>
-            <Dependent Role="Answer">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_LoginClaim_dbo_Login_LoginId">
-          <End Role="Login" Type="Self.Login" Multiplicity="1">
+          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="LoginClaim" Type="Self.LoginClaim" Multiplicity="*" />
+          <End Type="SuperBobModel.LoginClaim" Role="LoginClaim" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
@@ -361,10 +302,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_LoginSocialMedia_dbo_Login_LoginId">
-          <End Role="Login" Type="Self.Login" Multiplicity="1">
+          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="LoginSocialMedia" Type="Self.LoginSocialMedia" Multiplicity="*" />
+          <End Type="SuperBobModel.LoginSocialMedia" Role="LoginSocialMedia" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
@@ -375,161 +316,139 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Person_Login">
-          <End Role="Login" Type="Self.Login" Multiplicity="1" />
-          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1" />
+          <End Type="SuperBobModel.Person" Role="Person" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Person">
-              <PropertyRef Name="PersonId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Question_Person">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="PersonId" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="PersonId" />
+              <PropertyRef Name="Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="LoginRole">
-          <End Role="Login" Type="Self.Login" Multiplicity="*" />
-          <End Role="Role" Type="Self.Role" Multiplicity="*" />
+          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="*" />
+          <End Type="SuperBobModel.Role" Role="Role" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="SuperBobEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Answers" EntityType="Self.Answer" />
-          <EntitySet Name="Logins" EntityType="Self.Login" />
-          <EntitySet Name="LoginClaims" EntityType="Self.LoginClaim" />
-          <EntitySet Name="LoginSocialMedias" EntityType="Self.LoginSocialMedia" />
-          <EntitySet Name="People" EntityType="Self.Person" />
-          <EntitySet Name="Questions" EntityType="Self.Question" />
-          <EntitySet Name="Roles" EntityType="Self.Role" />
-          <AssociationSet Name="FK_Answer_Person" Association="Self.FK_Answer_Person">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Answer" EntitySet="Answers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Answer_Question" Association="Self.FK_Answer_Question">
-            <End Role="Question" EntitySet="Questions" />
-            <End Role="Answer" EntitySet="Answers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_LoginClaim_dbo_Login_LoginId" Association="Self.FK_dbo_LoginClaim_dbo_Login_LoginId">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="LoginClaim" EntitySet="LoginClaims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_LoginSocialMedia_dbo_Login_LoginId" Association="Self.FK_dbo_LoginSocialMedia_dbo_Login_LoginId">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="LoginSocialMedia" EntitySet="LoginSocialMedias" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Person_Login" Association="Self.FK_Person_Login">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="Person" EntitySet="People" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Question_Person" Association="Self.FK_Question_Person">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Question" EntitySet="Questions" />
-          </AssociationSet>
-          <AssociationSet Name="LoginRole" Association="Self.LoginRole">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="Role" EntitySet="Roles" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="VideoLibraries" Relationship="SuperBobModel.FK_VideoLibrary_Genre" FromRole="Genre" ToRole="VideoLibrary" />
+        </EntityType>
+        <EntityType Name="VideoLibrary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="200" FixedLength="true" Unicode="true" />
+          <Property Name="GenreId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Genre" Relationship="SuperBobModel.FK_VideoLibrary_Genre" FromRole="VideoLibrary" ToRole="Genre" />
+        </EntityType>
+        <Association Name="FK_VideoLibrary_Genre">
+          <End Type="SuperBobModel.Genre" Role="Genre" Multiplicity="1" />
+          <End Type="SuperBobModel.VideoLibrary" Role="VideoLibrary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoLibrary">
+              <PropertyRef Name="GenreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SuperBobModelStoreContainer" CdmEntityContainer="SuperBobEntities">
-          <EntitySetMapping Name="Answers">
-            <EntityTypeMapping TypeName="SuperBobModel.Answer">
-              <MappingFragment StoreEntitySet="Answer">
-                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
-                <ScalarProperty Name="Answer1" ColumnName="Answer" />
-                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
-                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
-                <ScalarProperty Name="Posted" ColumnName="Posted" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Logins">
             <EntityTypeMapping TypeName="SuperBobModel.Login">
               <MappingFragment StoreEntitySet="Login">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LoginClaims">
             <EntityTypeMapping TypeName="SuperBobModel.LoginClaim">
               <MappingFragment StoreEntitySet="LoginClaim">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
                 <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LoginSocialMedias">
             <EntityTypeMapping TypeName="SuperBobModel.LoginSocialMedia">
               <MappingFragment StoreEntitySet="LoginSocialMedia">
-                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
-                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
                 <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="SuperBobModel.Person">
               <MappingFragment StoreEntitySet="Person">
-                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="NickName" ColumnName="NickName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Questions">
-            <EntityTypeMapping TypeName="SuperBobModel.Question">
-              <MappingFragment StoreEntitySet="Question">
-                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="QuestionBody" ColumnName="QuestionBody" />
-                <ScalarProperty Name="Posted" ColumnName="Posted" />
-                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="SuperBobModel.Role">
               <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <AssociationSetMapping Name="LoginRole" TypeName="SuperBobModel.LoginRole" StoreEntitySet="LoginRole">
-            <EndProperty Name="Login">
-              <ScalarProperty Name="Id" ColumnName="LoginId" />
-            </EndProperty>
             <EndProperty Name="Role">
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
+            <EndProperty Name="Login">
+              <ScalarProperty Name="Id" ColumnName="LoginId" />
+            </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Genres">
+            <EntityTypeMapping TypeName="SuperBobModel.Genre">
+              <MappingFragment StoreEntitySet="Genre">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VideoLibraries">
+            <EntityTypeMapping TypeName="SuperBobModel.VideoLibrary">
+              <MappingFragment StoreEntitySet="VideoLibrary">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

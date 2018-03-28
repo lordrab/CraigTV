@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Answer.cs">
+    <Compile Include="Genre.cs">
       <DependentUpon>SuperBobDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
@@ -71,9 +71,6 @@
       <DependentUpon>SuperBobDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Question.cs">
-      <DependentUpon>SuperBobDb.tt</DependentUpon>
-    </Compile>
     <Compile Include="Role.cs">
       <DependentUpon>SuperBobDb.tt</DependentUpon>
     </Compile>
@@ -91,6 +88,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SuperBobDb.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="VideoLibrary.cs">
+      <DependentUpon>SuperBobDb.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

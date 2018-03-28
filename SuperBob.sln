@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperBob.Website", "SuperBob\SuperBob.Website.csproj", "{7ABF09FE-7083-4343-954D-5AF533FD2AD0}"
 EndProject
@@ -12,9 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperBob.Service", "SuperBob.Service\SuperBob.Service.csproj", "{A2619ACA-0545-4956-A07E-BCF5B37FFC26}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{50FA462A-5B1D-4F39-AA68-1C9BE7998FA1}"
-	ProjectSection(SolutionItems) = preProject
-		DBBuildFile.sql = DBBuildFile.sql
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,22 +39,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://casperit.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SuperBob.Model\\SuperBob.Model.csproj
-		SccProjectName1 = SuperBob.Model
-		SccLocalPath1 = SuperBob.Model
-		SccProjectUniqueName2 = SuperBob.Repository\\SuperBob.Repository.csproj
-		SccProjectName2 = SuperBob.Repository
-		SccLocalPath2 = SuperBob.Repository
-		SccProjectUniqueName3 = SuperBob.Service\\SuperBob.Service.csproj
-		SccProjectName3 = SuperBob.Service
-		SccLocalPath3 = SuperBob.Service
-		SccProjectUniqueName4 = SuperBob\\SuperBob.Website.csproj
-		SccProjectName4 = SuperBob
-		SccLocalPath4 = SuperBob
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {364DDB10-B58C-4456-9DF9-A37D62326520}
 	EndGlobalSection
 EndGlobal

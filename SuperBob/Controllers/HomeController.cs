@@ -12,17 +12,13 @@ using SuperBob.Models;
 using SuperBob.Model;
 using Microsoft.AspNet.Identity;
 
+
 namespace SuperBob.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private IQuestionService  _questionService;
-
-        public HomeController(IQuestionService questionService)
-        {
-            _questionService = questionService;
-        }
+        
 
         public ActionResult Index()
         {
@@ -34,29 +30,32 @@ namespace SuperBob.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
+            
+            var bob = User.Identity.GetUserId();
+
             return View();
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
+            var bob = User.Identity.GetUserId();
             return View();
         }
 
-        public ActionResult GetQuestionList()
-        {
-            var questionList = _questionService.GetQuestion().Select(x => new QuestionModel
-            {
-                QuestionId = x.QuestionId,
-                QuestionBody = x.QuestionBody,
-                Title = x.Title.Trim(),
-                Posted = x.Posted
-            }).ToList();
+        //public ActionResult GetQuestionList()
+        //{
+        //    var questionList = _questionService.GetQuestion().Select(x => new QuestionModel
+        //    {
+        //        QuestionId = x.QuestionId,
+        //        QuestionBody = x.QuestionBody,
+        //        Title = x.Title.Trim(),
+        //        Posted = x.Posted
+        //    }).ToList();
 
             
-            return Json(questionList, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(questionList, JsonRequestBehavior.AllowGet);
+        //}
         
     }
 }

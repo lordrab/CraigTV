@@ -26,6 +26,7 @@ namespace SuperBob.Repository
         }
         public IEnumerable<T> GetAll()
         {
+            
             return dbSet.AsEnumerable();
         }
 
@@ -41,6 +42,19 @@ namespace SuperBob.Repository
             _unitOfWork.Commit();
 
             return model;
+        }
+
+        public void Delete(int id)
+        {
+            T model = dbSet.Find(id);
+            dbSet.Remove(model);
+            _unitOfWork.Commit();
+        }
+
+        public void Update(T model)
+        {
+            dbSet.Attach(model);
+            _unitOfWork.Commit();
         }
     }
 }
