@@ -16,7 +16,7 @@
                 <span >{{row[key].value}}</span>
                 </td>
                 
-                <td><button class="btn btn-success" ng-click="AddRecord(row.Id,$index)">Edit</button>
+                <td><button class="btn btn-success" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
                 <button class="btn btn-danger">Delete</button>
                 </td>
 
@@ -34,12 +34,12 @@
             $scope.currentEditId = 0;
 
             $scope.AddRecord = function (index,rowIndex) {
-                console.log(rowIndex)
+                console.log(index)
                 $scope.currentEditId = rowIndex;
                 $http({
                     url: $scope.superListData.addEditUrl,
                     method: 'post',
-                    data: { Id: index.value }
+                    data: { Id: index }
                 }).then(function (result) {
 
                     var modal = {
