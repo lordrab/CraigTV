@@ -1,7 +1,7 @@
 ﻿
 app.controller("UserCtrl", function($scope,$http) {
 
-    $scope.bob = {
+    $scope.superList = {
         url: 'test',
         bob: 'asdasd'
     };

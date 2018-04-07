@@ -21,5 +21,12 @@ namespace SuperBob.Service
         {
             return _genreRepository.GetAll();
         }
+
+        public Genre GetById(int id)
+        {
+            return _genreRepository.GetById(id);
+        }
+
+        
     }
 }

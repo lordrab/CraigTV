@@ -57,6 +57,11 @@ namespace SuperBob
                     newProp.DisplayProperty = false;
                 }
 
+                if (currentProperty.Name.Contains("Id"))
+                {
+                    newProp.DisplayProperty = false;
+                }
+
                 propertyList.Add(newProp);
             }
             model.PropertyNames = propertyList;
@@ -104,7 +109,7 @@ namespace SuperBob
             var createModel = CreateEditDataModel(id);
             return Json(createModel, JsonRequestBehavior.AllowGet);
         }
-
+       
         public virtual ReactCreateEditDataModel<EditViewModel> CreateEditDataModel(int id)
         {
             // map table class model to popup create/edit model
@@ -257,7 +262,7 @@ namespace SuperBob
         {
             // map popup model to new table class model
             T saveModel = new T();
-            var ViewModelProps = typeof(ViewListModel).GetProperties();
+            var ViewModelProps = typeof(EditViewModel).GetProperties();
             try
             {
                 var tableProps = typeof(T).GetProperties();
@@ -266,7 +271,7 @@ namespace SuperBob
                 {
                     foreach (var otherProperty in ViewModelProps)
                     {
-                        if (modelProperty.Name == otherProperty.Name)
+                        if (modelProperty.Name == otherProperty.Name && modelProperty.Name != "Id")
                         {
                             modelProperty.SetValue(saveModel, otherProperty.GetValue(model));
                         }
@@ -287,7 +292,7 @@ namespace SuperBob
             try
             {
                 var modelProperties = model.GetType().GetProperties();               
-                var ViewModelProps = typeof(ViewListModel).GetProperties();              
+                var ViewModelProps = typeof(EditViewModel).GetProperties();              
                 var updateTableProps = updateModel.GetType().GetProperties();
 
                 foreach (var modelProperty in updateTableProps)
@@ -328,7 +333,7 @@ namespace SuperBob
             return Convert.ToInt32(addId);
         }
 
-        public virtual ActionResult SaveData(EditViewModel model)
+        public virtual PopupSaveResultModel SaveData(EditViewModel model)
         {
             // Save Data to Database
             PopupSaveResultModel resultObject  = new PopupSaveResultModel();
@@ -354,9 +359,10 @@ namespace SuperBob
                 {
                     // create a new table class object for new record
                     var saveModel = MapPopupModelCreateTableModel(model);
+                    
                     var saveResult = db.Set<T>().Add(saveModel);
 
-                    db.SaveChanges();                    
+                    //db.SaveChanges();                    
                     resultObject.Id = Convert.ToInt32(GetNewRecordId(saveResult));
                     resultObject.AddRecord = true;
                     resultObject.Success = true;
@@ -365,10 +371,47 @@ namespace SuperBob
             }
             catch (Exception e)
             {
-                return Json(new PopupSaveResultModel { Id = 0, AddRecord = true, Success = false });
+
+                return new PopupSaveResultModel { Id = 0, AddRecord = true, Success = false };
             }
 
-            return Json(resultObject, JsonRequestBehavior.AllowGet);
+            return resultObject;
+        }
+
+
+        public virtual List<PopupSaveListData> MapToDisplayListModel(EditViewModel model)
+        {
+            List<PopupSaveListData> displayListModelList = new List<PopupSaveListData>();
+            var modelProperties = model.GetType().GetProperties();
+            var displayListProps = typeof(ViewListModel).GetProperties();
+
+            foreach (var mprop in modelProperties)
+            {
+                var value = mprop.GetValue(model);
+                if (mprop.PropertyType.Name != "List`1")
+                {
+                    foreach (var displayProp in displayListProps)
+                    {
+                        if (mprop.Name == displayProp.Name)
+                        {
+                            displayListModelList.Add(new PopupSaveListData
+                            {
+                                PropertyName = mprop.Name,
+                                PropertyValue = mprop.GetValue(model).ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return displayListModelList;
+        }
+        public virtual ActionResult SaveCurrentData(EditViewModel model)
+        {
+            
+            var result = SaveData(model);
+            var displayListData = MapToDisplayListModel(model);
+            result.AddDisplayListData = displayListData;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public virtual ActionResult Delete(int id)

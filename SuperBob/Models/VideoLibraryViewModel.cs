@@ -10,7 +10,8 @@ namespace SuperBob.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Genre { get; set; }
+        public int GenreId { get; set; }
+        public string GenreType { get; set; }
     }
 
     public class VideoLibraryEditViewModel 
@@ -20,6 +21,7 @@ namespace SuperBob.Models
         [Display(Name = "Customer Name")]
         public int GenreId { get; set; }
         public List<ReactDropDownModel> GenreList { get; set; }
+        public string FileName { get; set; }
         
     }
     

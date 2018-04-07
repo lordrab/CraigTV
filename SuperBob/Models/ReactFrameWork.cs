@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using SuperBob.Models;
 
 namespace SuperBob.Models
 {
@@ -13,8 +13,14 @@ namespace SuperBob.Models
         public int Id { get; set; }
         public bool Success { get; set; }
         public bool AddRecord { get; set; }
+        public List<PopupSaveListData> AddDisplayListData { get; set; }
     }
 
+    public class PopupSaveListData
+    {
+        public string PropertyName { get; set; }
+        public string PropertyValue { get; set; }
+    }
     public class PopupDeleteResultModel
     {
         public bool Success { get; set; }

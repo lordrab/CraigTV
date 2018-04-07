@@ -27,47 +27,7 @@ namespace SuperBob.Controllers
             return View();
         }
 
-        public override ActionResult SaveData(PersonListViewModel model)
-        {
-            // Save Data to Database
-            PopupSaveResultModel resultObject = new PopupSaveResultModel();
-            try
-            {
-                var id = GetEditId(model);
-
-                if (id != 0)
-                {
-                    // get record to update
-                    var updateModel = _userService.GetUserById(id);
-
-                    // map data from popup model to table model
-                    MapPopupModelUpdateTableModel(model, updateModel);
-                    resultObject.Id = Convert.ToInt32(id);
-                    resultObject.AddRecord = false;
-                    resultObject.Success = true;
-
-                }
-                else
-                {
-                    // create a new table class object for new record
-                    var saveModel = MapPopupModelCreateTableModel(model);
-                   
-                    saveModel.Id = User.Identity.GetUserId<int>();
-                    var saveResult = _userService.AddUser(saveModel);
-
-                    resultObject.Id = User.Identity.GetUserId<int>();
-                    resultObject.AddRecord = true;
-                    resultObject.Success = true;
-
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(new PopupSaveResultModel { Id = 0, AddRecord = true, Success = false });
-            }
-
-            return Json(resultObject, JsonRequestBehavior.AllowGet);
-        }
+        
         
     }
    

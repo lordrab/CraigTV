@@ -10,5 +10,6 @@ namespace SuperBob.Service.Contract
     public  interface IGenreService
     {
         IEnumerable<Genre> GetGenreList();
+        Genre GetById(int id);
     }
 }

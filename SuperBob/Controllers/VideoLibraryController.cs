@@ -39,5 +39,30 @@ namespace SuperBob.Controllers
             createModel.Model.GenreList = genreList;
             return Json(createModel, JsonRequestBehavior.AllowGet);
         }
+
+        public override ActionResult DisplayList()
+        {
+            var model = GetListData();
+            foreach( var m in model.DataList)
+            {
+                m.GenreType = _genreService.GetById(m.GenreId).Name.Trim();
+            }
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public override ActionResult SaveCurrentData(VideoLibraryEditViewModel model)
+        {
+
+            var result = SaveData(model);
+            var displayListData = MapToDisplayListModel(model);
+            displayListData.Add(new PopupSaveListData
+            {
+                PropertyName = "GenreType",
+                PropertyValue = _genreService.GetById(model.GenreId).Name
+            });
+            result.AddDisplayListData = displayListData;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
