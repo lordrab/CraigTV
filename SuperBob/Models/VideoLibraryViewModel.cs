@@ -6,15 +6,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SuperBob.Models
 {
-    public class VideoLibraryListViewModel
+    public class GerneListModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
         public int GenreId { get; set; }
         public string GenreType { get; set; }
     }
 
-    public class VideoLibraryEditViewModel 
+    public class VideoLibraryListViewModel : GerneListModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+    }
+
+    public class VideoLibraryEditViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -22,8 +27,14 @@ namespace SuperBob.Models
         public int GenreId { get; set; }
         public List<ReactDropDownModel> GenreList { get; set; }
         public string FileName { get; set; }
-        
+
     }
-    
-    
+
+    public class VideoLibraryAddModel
+    {
+        public string fileName { get; set; }
+        public string videoName { get; set; }
+        public int genreType { get; set; }
+        public string videoDescription { get; set; }
+    }
 }

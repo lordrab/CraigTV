@@ -1,4 +1,4 @@
-﻿app.directive('superList', function (dataService) {
+﻿app.directive('superList', function (yesNoPopupService) {
     return {
 
         template: `<div class="container"><div class="row">
@@ -17,7 +17,7 @@
                 </td>
                 
                 <td><button class="btn btn-success" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
-                <button class="btn btn-danger">Delete</button>
+                <button class="btn btn-danger" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
                 </td>
 
                 </tr>
@@ -33,37 +33,61 @@
             $scope.rowData = [];
             $scope.currentEditId = 0;
 
-            $scope.AddRecord = function (index,rowIndex) {
-                console.log(index)
-                $scope.currentEditId = rowIndex;
-                $http({
-                    url: $scope.superListData.addEditUrl,
-                    method: 'post',
-                    data: { Id: index }
-                }).then(function (result) {
+            $scope.AddRecord = function (index, rowIndex) {
+                
+                if ($scope.superListData.addFunction == 'undefined' || $scope.superListData.addFunction == null) {
+                    $scope.currentEditId = rowIndex;
+                    $http({
+                        url: $scope.superListData.addEditUrl,
+                        method: 'post',
+                        data: { Id: index }
+                    }).then(function (result) {
 
-                    var modal = {
-                        popupModal: result.data.PopupDisplayModel,
-                        dataModel: result.data.Model
-                    }
-                    $scope.DataModal(modal, $scope);
-                })
+                        var modal = {
+                            popupModal: result.data.PopupDisplayModel,
+                            dataModel: result.data.Model
+                        }
+                        $scope.DataModal(modal, $scope);
+                    })
+                } else {
+                    $scope.superListData.addFunction(index, rowIndex, $scope.rowData);
 
-            }
+                }
+               
 
-            
+            };
+
+            $scope.DeleteRecord = function (index, rowIndex) {
+
+
+                var DeleteFunction = function (url, index) {
+                    $http({
+                        method: 'post',
+                        url: url,
+                        data: { id: index }
+                    }).then(function (result) {
+
+                        if (result.data.Success) {
+                            $scope.rowData.splice(rowIndex, 1)
+                        }
+
+                    });
+                }
+
+                yesNoPopupService.YesNoPopup(function () { DeleteFunction($scope.superListData.deleteDataUrl, index); });
+
+            };
+
             $scope.form = "";
             $http({
                 url: $scope.superListData.displayUrl,
                 method: 'get'
             }).then(function (response) {
-                
+
                 $scope.propertyNames = response.data.PropertyNames;
 
                 for (i = 0; i < response.data.DataList.length; i++) {
-
                     $scope.createListModel(response.data.DataList[i])
-
                 }
 
             });
@@ -79,11 +103,8 @@
                         display: $scope.propertyNames[p].DisplayProperty
                     }
                 }
-                console.log(model)
-
                 $scope.rowData.push(model);
-
-            }
+            };
 
             $scope.DataModal = function (frameWorkModel, scope) {
 
@@ -105,8 +126,23 @@
                         <div class="col-sm-9">
                         <select ng-model="row.listId" ng-options="option.Text for option in row.Value track by option.Value">                        
                         </select>
+                        </div>                       
                         </div>
-                        </div> </div>
+                        <div ng-if="row.tagType == 15">
+                        <div class="col-sm-3">{{row.label}}</div>  
+                        <div class="col-sm-9"><input type="file" id="file" name="file" class="inputfile" onChange="handlechange()"/>
+                        <label id="displayfilename" output="file">FileName is here</label>
+                        <label for="file" >Browse</label>
+                        <button ng-click="Upload()">Upload</button>
+                        <div class="progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" id="uploadbar" aria-valuenow="20" aria-valuemin="100" aria-valuemax="300" style="width:0%">
+                    <span id="progressbar-label">%</span>
+                        </div>
+                        </div>
+                        
+                    </div>
+                        </div>
+                        </div>
                         <div class="modal-footer"><button class="btn btn-success" ng-click="SaveData()">Save</button>
                         <button class="btn btn-default" ng-click="ClosePersonModal()">Cancel</button>
                         </div>
@@ -114,9 +150,12 @@
                     ,
                     controller: function ($scope) {
 
-                        // build popup modal object    
+                        $("#file").css('opacity','0');
                         
+                        // build popup modal object                           
                         $scope.uiPopUpModel = {};
+                        $scope.fileSize = 0;
+                        $scope.uploaded = 0;
                         for (i = 0; i < frameWorkModel.popupModal.length; i++) {
                             if (frameWorkModel.popupModal[i].PropertyName.indexOf("List") != -1) {
                                 var linkListId = frameWorkModel.popupModal[i].PropertyName.replace("List", "Id");
@@ -135,6 +174,101 @@
                         $scope.ClosePersonModal = function () {
                             modalId.close();
                         };
+
+                        this.handlechange = function(e) {
+                            console.log(e)
+                        }
+
+                        
+                        $scope.Upload = function () {
+
+                            var files = document.getElementById('file').files;
+                            var file = files[0];
+
+                            $scope.fileSize = file.size;
+
+                            var filetype = file.type;
+                            var filename = file.name
+                            var block = 3000000;
+                            var filePointer = 0;
+                            var fileLock = false;
+                            var writeSuccess = false;
+                            var endOfFile = false;
+                            
+                            console.log(file)
+
+                            $scope.uploaded = 0;
+                           
+                            var refreshIntervalId = setInterval(function () {                              
+
+                                if ($scope.fileSize < block) {
+                                    block = $scope.fileSize;
+                                }
+
+                                if ($scope.uploaded < $scope.fileSize) {
+                                    
+                                    if (fileLock == false) {
+                                        fileLock = true;
+                                        var leftToDownload = $scope.fileSize - $scope.uploaded;
+                                        
+                                        if (leftToDownload < block) {
+                                            block = leftToDownload;
+                                            endOfFile = true;
+                                        }
+                                        var blob = file.slice(filePointer, filePointer + block);
+                                        var fileData = new FileReader();
+
+                                        fileData.onloadend = function (evt) {
+                                            if (evt.target.readyState == FileReader.DONE) {
+                                                var data = { fileName: filename, fileData: getB64Str(evt.target.result), contentType: "ss", endOfFile: endOfFile }
+                                                
+                                                $.ajax({
+                                                    url: '/VideoLibrary/Upload',
+                                                    type: 'post',
+                                                    data: data,
+                                                    success: function (data) {                                                        
+                                                        writeSuccess = data.writeSuccess;
+                                                        if (writeSuccess) {                                                            
+                                                            $scope.uploaded = filePointer + block;
+                                                            filePointer = filePointer + block;                                                        }
+                                                        var percent = $scope.uploaded / $scope.fileSize * 100
+                                                        console.log(percent)
+                                                        $("#uploadbar").css("width", percent + "%")
+                                                        $("#progressbar-label").text(Math.round(percent) + "%")
+                                                        $("#bob").text(filePointer)
+                                                        if (endOfFile != true) {
+                                                            fileLock = false;
+                                                        } else {
+                                                            clearInterval(refreshIntervalId);
+                                                        }
+
+                                                    },
+                                                    error: function (response) {
+                                                        console.log(response)
+                                                    }
+                                                })
+                                            }
+                                        }
+
+                                        fileData.readAsArrayBuffer(blob);    
+                                    }
+                                } else {
+                                    clearInterval(refreshIntervalId);
+                                    console.log("End")
+                                    console.log($scope.uploaded)
+                                }
+                            }, 1000);
+
+                        }
+                        function getB64Str(buffer) {
+                            var binary = '';
+                            var bytes = new Uint8Array(buffer);
+                            var len = bytes.byteLength;
+                            for (var i = 0; i < len; i++) {
+                                binary += String.fromCharCode(bytes[i]);
+                            }
+                            return window.btoa(binary);
+                        }
 
                         $scope.SaveData = function () {
                             // model object used in viewmodel. label is what is displayed as label. model is property in ng-model
@@ -162,7 +296,7 @@
                                 url: scope.superListData.saveDataUrl,
                                 data: returnModel
                             }).then(function (result) {
-                               console.log(result)
+                                console.log(result)
                                 if (result.data.Success) {
                                     if (result.data.AddRecord) {
                                         var newObj = {};
@@ -178,8 +312,8 @@
                                             scope.rowData[id][result.data.AddDisplayListData[i].PropertyName].value = result.data.AddDisplayListData[i].PropertyValue;
                                         }
                                     }
-                                   
-                                    
+
+
                                 };
 
 

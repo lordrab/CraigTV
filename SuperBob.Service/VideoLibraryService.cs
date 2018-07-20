@@ -18,9 +18,25 @@ namespace SuperBob.Service
             _videoLibraryRepository = videoLibraryRepository;
         }
 
+        public bool AddVideoLibrary(VideoLibrary model)
+        {
+            try
+            {
+                _videoLibraryRepository.Add(model);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
+        }
+
         public IEnumerable<VideoLibrary> GetVideoLibrary()
         {             
             return _videoLibraryRepository.GetAll();
         }
+
+
     }
 }

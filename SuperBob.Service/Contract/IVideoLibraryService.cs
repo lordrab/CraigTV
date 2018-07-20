@@ -10,5 +10,6 @@ namespace SuperBob.Service.Contract
     public interface IVideoLibraryService
     {
         IEnumerable<VideoLibrary> GetVideoLibrary();
+        bool AddVideoLibrary(VideoLibrary model);
     }
 }

@@ -3,3 +3,12 @@
     margin-top: 5px;
     margin-bottom: 15px;
 }
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}

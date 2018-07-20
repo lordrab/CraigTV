@@ -14,7 +14,7 @@ using SuperBob.Model;
 namespace SuperBob
 {
    
-    public abstract class ReactBaseController<T, ViewListModel, EditViewModel> : Controller where T : class, new()
+    public abstract class ReactBaseController<T, ViewListModel, EditViewModel, AddViewModel> : Controller where T : class, new()
         where ViewListModel : new() where EditViewModel : new() 
 
     {
@@ -362,7 +362,7 @@ namespace SuperBob
                     
                     var saveResult = db.Set<T>().Add(saveModel);
 
-                    //db.SaveChanges();                    
+                    db.SaveChanges();                    
                     resultObject.Id = Convert.ToInt32(GetNewRecordId(saveResult));
                     resultObject.AddRecord = true;
                     resultObject.Success = true;
@@ -448,6 +448,23 @@ namespace SuperBob
                     p.DisplayProperty = false;
                 }
             }
+        }
+
+        public void SetEditPropertyTagType(List<ReactPopupModel> model, string propertyName)
+        {
+            foreach( var m in model)
+            {
+                if ( m.PropertyName == propertyName)
+                {
+                    m.TagType = 15;
+                }
+            }
+        }
+
+        public void BuildAddModel(AddViewModel model)
+        {
+            ReactListResultModel<ViewListModel> returnModel = new ReactListResultModel<ViewListModel>();
+            
         }
     }
 }
