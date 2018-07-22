@@ -1,10 +1,8 @@
 ﻿
 app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
-
-    
-    $scope.CustomAdd = function (index, rowIndex, superListModel) {
-    
-
+   
+    $scope.CustomAdd = function (index, rowIndex, superListAddToModel) {
+        console.log(index)
     var modalId = $uibModal.open({
         template: `<div class="modal-content">
                         <div class="modal-header">Upload Video</div>
@@ -80,7 +78,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
             $scope.model = { fileName: '', videoName: '', genreType: 0, videoDescription: ''}
             $scope.genreData = [];
             $scope.uploadFileName = 'Click Browse to select file....';
-
+            
             $http({
                 url: '/VideoLibrary/GetGenreList',
                 method: 'get'
@@ -88,12 +86,10 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                 for (i = 0; i < response.data.length; i++) {
                     var rowModel = { id: response.data[i].GenreId, genreType: response.data[i].GenreType}
                     $scope.genreData.push(rowModel)
-                }
-                
+                }                
             })
         
             $scope.uploadFile = function (test) {
-
                 $scope.uploadFileName = test[0].name;
                 // now trigger a view model update
                 $scope.model.fileName = test[0].name;
@@ -115,8 +111,6 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                 var fileLock = false;
                 var writeSuccess = false;
                 var endOfFile = false;
-
-                console.log(file)
 
                 $scope.uploaded = 0;
 
@@ -185,15 +179,17 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                                 method: 'post',
                                 data: $scope.model
                             }).then(function (response) {
-                                superListModel.push(response.data.displayListModel)
-                                console.log(superListModel)
+                                //superListModel.push(response.data.displayListModel)
+                                var saveModel = {
+                                    Id: response.data.displayListModel.Id, GenreType:  response.data.displayListModel.GenreType,
+                                    GenreId: response.data.displayListModel.GenreType, Name:  response.data.displayListModel.Name 
+                                     
+                                }
+                                superListAddToModel(saveModel);
                                 modalId.close();
-                            })
-
-                        
+                            })                       
                     }
                 }, 1000);
-
             };
 
             function getB64Str(buffer) {
@@ -209,24 +205,10 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
             $scope.cancelUpload = function () {                
                 modalId.close();
             };
-
-
         },
         scope: $scope
     });
 }
-
-$scope.superListData = {
-    displayUrl: '/VideoLibrary/DisplayList',
-    addEditUrl: '/VideoLibrary/EditData',
-    saveDataUrl: '/VideoLibrary/SaveCurrentData',
-    deleteDataUrl: '/VideoLibrary/Delete',
-    addFunction: $scope.CustomAdd
-}
-
-console.log($scope.superListData)
-
-
 
 })
 

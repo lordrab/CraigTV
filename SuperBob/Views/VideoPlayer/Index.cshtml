@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/App/Controllers/VideoLibrary/VideoPlayerController.js"></script>
+
+<div ng-controller="videoPlayerCtrl">
+    <div ng-show="addVideoHide.masterPlayList">
+        <super-list mvccontroller="VideoPlayer" add-Function="addVideoList"></super-list>
+    </div>
+
+    @*<video id="videoPlayer" class="video-js"></video>*@
+
+    <div ng-show="addVideoHide.playListName">
+        <br />
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        
+                        <label>PlayList Name</label>
+                        <input type="text" class="form-control" ng-model="playListModel.Name" />
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <button style="margin-top: 25px;" class="btn btn-primary" ng-click="addPlayList()" ng-disabled="playListModel.Name == ''">Add PLayList</button>
+                </div>
+            </div>
+            <div class="row" ng-show="addVideoHide.playListVideos">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>PlayList Videos</label>
+                        <super-list mvccontroller="VideoLibrary"></super-list>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <button>Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

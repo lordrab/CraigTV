@@ -8,13 +8,17 @@
     @Scripts.Render("~/bundles/modernizr")
     <script src="~/Scripts/jquery-1.10.2.js"></script>
 
+    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+
+
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     <script src="~/App/App.js"></script>
 
     <script src="~/App/Directive/SuperList.js"></script>
-    
+
     <script src="~/App/Service/YesNoPopupService.js"></script>
     <link href="~/App/CSS/SuperList.css" rel="stylesheet" />
 </head>
@@ -34,11 +38,13 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Users", "Index", "User")</li>
                     <li>@Html.ActionLink("Video Library", "Index", "VideoLibrary")</li>
+                    <li>@Html.ActionLink("PlayLists", "Index", "VideoPlayer")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
+    @*style="width: 95%; padding-left: 2px; margin-left: 2px; padding-right: 8px; margin-right: 8px; "*@
     <div class="container body-content">
         @Html.AntiForgeryToken()
         @RenderBody()

@@ -32,6 +32,8 @@ public partial class SuperBobEntities : DbContext
     }
 
 
+    public virtual DbSet<Genre> Genres { get; set; }
+
     public virtual DbSet<Login> Logins { get; set; }
 
     public virtual DbSet<LoginClaim> LoginClaims { get; set; }
@@ -40,9 +42,11 @@ public partial class SuperBobEntities : DbContext
 
     public virtual DbSet<Person> People { get; set; }
 
-    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<PlayList> PlayLists { get; set; }
 
-    public virtual DbSet<Genre> Genres { get; set; }
+    public virtual DbSet<PlayListVideo> PlayListVideos { get; set; }
+
+    public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<VideoLibrary> VideoLibraries { get; set; }
 

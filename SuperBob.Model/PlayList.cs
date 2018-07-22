@@ -15,11 +15,11 @@ namespace SuperBob.Model
 using System;
     using System.Collections.Generic;
     
-public partial class VideoLibrary
+public partial class PlayList
 {
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public VideoLibrary()
+    public PlayList()
     {
 
         this.PlayListVideos = new HashSet<PlayListVideo>();
@@ -31,15 +31,11 @@ public partial class VideoLibrary
 
     public string Name { get; set; }
 
-    public string FileName { get; set; }
-
-    public int GenreId { get; set; }
-
-    public string Description { get; set; }
+    public int LoginId { get; set; }
 
 
 
-    public virtual Genre Genre { get; set; }
+    public virtual Login Login { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 

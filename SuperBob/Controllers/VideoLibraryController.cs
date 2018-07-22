@@ -16,7 +16,7 @@ using System.Net;
 
 namespace SuperBob.Controllers
 {
-    public class VideoLibraryController : ReactBaseController<VideoLibrary, VideoLibraryListViewModel, VideoLibraryEditViewModel, VideoLibraryAddModel>
+    public class VideoLibraryController : ReactBaseController<VideoLibrary, VideoLibraryListViewModel, VideoLibraryEditViewModel>
     {
         // GET: Video
         private IVideoLibraryService _videoLibraryService;
@@ -80,7 +80,9 @@ namespace SuperBob.Controllers
             {
 
                 var bytes = Convert.FromBase64String(file.fileData);
-                var savedFile = @"c:/upload/" + file.fileName;
+                // var savedFile = @"c:/upload/" + file.fileName;
+                var imagesDir = System.Web.HttpContext.Current.Server.MapPath("~/Videos/");
+                var savedFile = imagesDir + "TestVid.mp4";
 
                 if (file.EndOfFile)
                 {
@@ -152,5 +154,6 @@ namespace SuperBob.Controllers
 
 
         }
+        
     }
 }

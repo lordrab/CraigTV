@@ -1,6 +1,12 @@
 ﻿app.directive('superList', function (yesNoPopupService) {
     return {
-
+        scope: {
+            mvccontroller: '@',
+            listDataMethod: '@',
+            saveDataMethod: '@',
+            deleteDataMethod: '@',
+            addFunction: '='
+        },
         template: `<div class="container"><div class="row">
                 <button class="btn btn-primary addButton" ng-click="AddRecord(0)">Add</button>
 
@@ -11,31 +17,55 @@
                 <th>Action</th>
                 </tr>
                 <tr ng-repeat="row in rowData">
-                <td ng-repeat="(key,value) in row" ng-if="row[key].display">
-                  
+                <td ng-repeat="(key,value) in row" ng-if="row[key].display">                  
                 <span >{{row[key].value}}</span>
-                </td>
-                
+                </td>                
                 <td><button class="btn btn-success" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
                 <button class="btn btn-danger" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
+                <div class="test"></div>
                 </td>
-
-                </tr>
                 
+                </tr>               
                 </table>
                 </div>
         <div class="row">{{data.Id}}</div>
 </div>
 `,
         controller: function SuperListController($scope, $http, $uibModal) {
+            
+            $scope.superListData = {
+                displayUrl: '/' + $scope.mvccontroller + '/DisplayList',
+                addEditUrl: '/' + $scope.mvccontroller + '/EditData',
+                saveDataUrl: '/' + $scope.mvccontroller + '/SaveCurrentData',
+                deleteDataUrl: '/' + $scope.mvccontroller + '/Delete',
+                addFunction: $scope.addFunction
+                
+            }
+            
+            // if as different display list method has been passed use it
+            if (typeof($scope.listDataMethod) != 'undefined') {
+                $scope.superListData.displayUrl = '/' + $scope.mvccontroller + '/' + $scope.listDataMethod;
+            } 
+            // same with a delete method
+            if (typeof ($scope.deleteDataMethod) != 'undefined') {
+                $scope.superListData.deleteDataUrl = '/' + $scope.mvccontroller + '/' + $scope.deleteDataMethod;
+            }
 
+            // same with a delete method
+            if (typeof ($scope.saveDataMethod) != 'undefined') {
+                $scope.superListData.saveDataUrl = '/' + $scope.mvccontroller + '/' + $scope.saveDataMethod;
+            }
             $scope.propertyNames = [];
             $scope.rowData = [];
             $scope.currentEditId = 0;
 
             $scope.AddRecord = function (index, rowIndex) {
-                
-                if ($scope.superListData.addFunction == 'undefined' || $scope.superListData.addFunction == null) {
+                console.log(typeof ($scope.addFunction))
+                if (typeof ($scope.addFunction ) != "undefined"  ) {
+                    
+                    $scope.superListData.addFunction(index, rowIndex, $scope.createListModel, $scope.getRowData);                   
+                   
+                } else {   
                     $scope.currentEditId = rowIndex;
                     $http({
                         url: $scope.superListData.addEditUrl,
@@ -49,12 +79,8 @@
                         }
                         $scope.DataModal(modal, $scope);
                     })
-                } else {
-                    $scope.superListData.addFunction(index, rowIndex, $scope.rowData);
-
-                }
-               
-
+                    
+                }              
             };
 
             $scope.DeleteRecord = function (index, rowIndex) {
@@ -83,28 +109,29 @@
                 url: $scope.superListData.displayUrl,
                 method: 'get'
             }).then(function (response) {
-
                 $scope.propertyNames = response.data.PropertyNames;
 
                 for (i = 0; i < response.data.DataList.length; i++) {
                     $scope.createListModel(response.data.DataList[i])
-                }
-
+                }               
             });
-
+           
             $scope.createListModel = function (data) {
                 var model = {};
                 for (p = 0; p < $scope.propertyNames.length; p++) {
 
                     var value = data[$scope.propertyNames[p].PropertyName];
-
                     model[$scope.propertyNames[p].PropertyName] = {
                         value: value,
                         display: $scope.propertyNames[p].DisplayProperty
                     }
                 }
-                $scope.rowData.push(model);
+                $scope.rowData.push(model);                
             };
+
+            $scope.getRowData = function (rowIndex) {
+                return $scope.rowData[rowIndex]
+            }
 
             $scope.DataModal = function (frameWorkModel, scope) {
 
@@ -128,24 +155,10 @@
                         </select>
                         </div>                       
                         </div>
-                        <div ng-if="row.tagType == 15">
-                        <div class="col-sm-3">{{row.label}}</div>  
-                        <div class="col-sm-9"><input type="file" id="file" name="file" class="inputfile" onChange="handlechange()"/>
-                        <label id="displayfilename" output="file">FileName is here</label>
-                        <label for="file" >Browse</label>
-                        <button ng-click="Upload()">Upload</button>
-                        <div class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" id="uploadbar" aria-valuenow="20" aria-valuemin="100" aria-valuemax="300" style="width:0%">
-                    <span id="progressbar-label">%</span>
-                        </div>
-                        </div>
-                        
-                    </div>
-                        </div>
                         </div>
                         <div class="modal-footer"><button class="btn btn-success" ng-click="SaveData()">Save</button>
                         <button class="btn btn-default" ng-click="ClosePersonModal()">Cancel</button>
-                        </div>
+                        
                         </div>`
                     ,
                     controller: function ($scope) {

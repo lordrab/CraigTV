@@ -14,7 +14,7 @@ using SuperBob.Model;
 namespace SuperBob
 {
    
-    public abstract class ReactBaseController<T, ViewListModel, EditViewModel, AddViewModel> : Controller where T : class, new()
+    public abstract class ReactBaseController<T, ViewListModel, EditViewModel> : Controller where T : class, new()
         where ViewListModel : new() where EditViewModel : new() 
 
     {
@@ -461,10 +461,6 @@ namespace SuperBob
             }
         }
 
-        public void BuildAddModel(AddViewModel model)
-        {
-            ReactListResultModel<ViewListModel> returnModel = new ReactListResultModel<ViewListModel>();
-            
-        }
+       
     }
 }
