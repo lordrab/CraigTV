@@ -3,9 +3,11 @@
         scope: {
             mvccontroller: '@',
             listDataMethod: '@',
+            editDataMethod: '@',
             saveDataMethod: '@',
             deleteDataMethod: '@',
-            addFunction: '='
+            addFunction: '=',
+            displayListData: '='
         },
         template: `<div class="container"><div class="row">
                 <button class="btn btn-primary addButton" ng-click="AddRecord(0)">Add</button>
@@ -55,17 +57,24 @@
             if (typeof ($scope.saveDataMethod) != 'undefined') {
                 $scope.superListData.saveDataUrl = '/' + $scope.mvccontroller + '/' + $scope.saveDataMethod;
             }
+
+            // same with a delete method
+            if (typeof ($scope.editDataMethod) != 'undefined') {
+                $scope.superListData.addEditUrl = '/' + $scope.mvccontroller + '/' + $scope.editDataMethod;
+            }
+
             $scope.propertyNames = [];
             $scope.rowData = [];
             $scope.currentEditId = 0;
 
             $scope.AddRecord = function (index, rowIndex) {
-                console.log(typeof ($scope.addFunction))
+                
                 if (typeof ($scope.addFunction ) != "undefined"  ) {
                     
                     $scope.superListData.addFunction(index, rowIndex, $scope.createListModel, $scope.getRowData);                   
                    
                 } else {   
+                    console.log($scope.superListData.addEditUrl)
                     $scope.currentEditId = rowIndex;
                     $http({
                         url: $scope.superListData.addEditUrl,
@@ -105,16 +114,34 @@
             };
 
             $scope.form = "";
-            $http({
-                url: $scope.superListData.displayUrl,
-                method: 'get'
-            }).then(function (response) {
-                $scope.propertyNames = response.data.PropertyNames;
+            
+            if (typeof ($scope.displayListData) == 'undefined') {
+                $http({
+                    url: $scope.superListData.displayUrl,
+                    method: 'get'
+                }).then(function (response) {
+                    $scope.propertyNames = response.data.PropertyNames;
 
-                for (i = 0; i < response.data.DataList.length; i++) {
-                    $scope.createListModel(response.data.DataList[i])
-                }               
-            });
+                    for (i = 0; i < response.data.DataList.length; i++) {
+                        $scope.createListModel(response.data.DataList[i])
+                    }
+                });
+            } else {
+                
+                $http({
+                    url: $scope.superListData.displayUrl,
+                    method: 'post',
+                    data: $scope.displayListData
+                }).then(function (response) {
+                    $scope.propertyNames = response.data.PropertyNames;
+                    console.log(response.data) 
+                    for (i = 0; i < response.data.DataList.length; i++) {
+                        $scope.createListModel(response.data.DataList[i])
+                    }
+                });
+                
+            }
+           
            
             $scope.createListModel = function (data) {
                 var model = {};
@@ -170,9 +197,13 @@
                         $scope.fileSize = 0;
                         $scope.uploaded = 0;
                         for (i = 0; i < frameWorkModel.popupModal.length; i++) {
+                            
                             if (frameWorkModel.popupModal[i].PropertyName.indexOf("List") != -1) {
                                 var linkListId = frameWorkModel.popupModal[i].PropertyName.replace("List", "Id");
-                                var linkedListIdValue = frameWorkModel.dataModel[linkListId].toString();
+                                if (typeof (frameWorkModel.dataModel[linkListId]) != 'undefined') {
+                                    var linkedListIdValue = frameWorkModel.dataModel[linkListId].toString();
+                                }
+                                
                             }
 
                             $scope.uiPopUpModel[frameWorkModel.popupModal[i].PropertyName] = {

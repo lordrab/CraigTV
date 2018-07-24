@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Linq.Expressions;
 using System.Reflection;
-using SuperBob.Models;
 
-namespace SuperBob.Models
+
+namespace SuperBob.Service
 {
     public class PopupSaveResultModel
     {

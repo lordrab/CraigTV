@@ -53,7 +53,13 @@ namespace SuperBob.Repository
 
         public void Update(T model)
         {
-            dbSet.Attach(model);
+            var entry = db.Entry(model);
+            if ( entry.State == EntityState.Detached )
+            {
+                //dbSet.Attach(model);
+                db.Set<T>().Attach(model);
+                entry.State = EntityState.Modified;
+            }
             _unitOfWork.Commit();
         }
     }

@@ -15,6 +15,9 @@ namespace SuperBob.App_Start
     using SuperBob.Service.Contract;
     using SuperBob.Model;
     using System.Data.Entity;
+    using SuperBob.Models;
+    using System.ComponentModel.DataAnnotations;
+    using SuperBob;
 
     public static class NinjectWebCommon 
     {
@@ -56,7 +59,7 @@ namespace SuperBob.App_Start
                 kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
                 kernel.Bind<IUserService>().To<UserService>();
                 kernel.Bind<IRepository<Person>>().To<Repository<Person>>();
-                kernel.Bind<IRepository<VideoLibrary>>().To <Repository<VideoLibrary>>();
+                kernel.Bind<IRepository<VideoLibrary>>().To<Repository<VideoLibrary>>();
                 kernel.Bind<IVideoLibraryService>().To<VideoLibraryService>();
                 kernel.Bind<IRepository<Genre>>().To<Repository<Genre>>();
                 kernel.Bind<IGenreService>().To<GenreService>();
@@ -66,7 +69,10 @@ namespace SuperBob.App_Start
 
                 kernel.Bind<IPlayListService>().To<PlayListService>();
                 kernel.Bind<IPlayListVideoService>().To<PlayListVideoService>();
-                // RegisterServices(kernel);
+
+                kernel.Bind<IReactFrameWorkService<PlayListVideo, VideoPLayerVideoListModel, VideoPLayerVideoEditModel>>().
+                    To<ReactFrameWorkService<PlayListVideo, VideoPLayerVideoListModel, VideoPLayerVideoEditModel>>();
+                RegisterServices(kernel);
                 return kernel;
             }
             catch

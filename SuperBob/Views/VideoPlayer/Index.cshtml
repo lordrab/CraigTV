@@ -16,7 +16,7 @@
         <br />
         <div class="container">
             <div class="row">
-                <div class="col-sm-9">
+                <div class="col-sm-11">
                     <div class="form-group">
                         
                         <label>PlayList Name</label>
@@ -24,19 +24,19 @@
                     </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-1">
                     <button style="margin-top: 25px;" class="btn btn-primary" ng-click="addPlayList()" ng-disabled="playListModel.Name == ''">Add PLayList</button>
                 </div>
             </div>
             <div class="row" ng-show="addVideoHide.playListVideos">
                 <div class="col-sm-12">
-                    <div class="form-group">
-                        <label>PlayList Videos</label>
-                        <super-list mvccontroller="VideoLibrary"></super-list>
-                    </div>
+                    <div id="bob"></div>
                 </div>
+                
+            </div>
+            <div class="row">
                 <div class="col-sm-12">
-                    <button>Close</button>
+                    <button class="btn btn-primary" style="float: right;" ng-click="closeVideoPLayList()">Close</button>
 
                 </div>
             </div>

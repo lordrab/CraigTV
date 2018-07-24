@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using SuperBob.Service;
 
 namespace SuperBob.Models
 {
@@ -20,5 +21,21 @@ namespace SuperBob.Models
         public int LoginId { get; set; }
        
     }
+
+    public class VideoPLayerVideoListModel
+    {
+        public int Id { get; set; }
+        public int PlayListId { get; set; }
+        public int VideoLibraryId { get; set; }
+        public string VideoName { get; set; }
+    }
     
+    public class VideoPLayerVideoEditModel
+    {
+        public int Id { get; set; }
+        public int PlayListId { get; set; }
+        //public List<ReactDropDownModel> PlayList { get; set; }
+        public int VideoLibraryId { get; set; }
+        public List<ReactDropDownModel> VideoLibrary { get; set; }
+    }
 }

@@ -228,7 +228,6 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\PersonViewModel.cs" />
     <Compile Include="Models\QuestionModel.cs" />
-    <Compile Include="Models\ReactFrameWork.cs" />
     <Compile Include="Models\Upload.cs" />
     <Compile Include="Models\VideoLibraryViewModel.cs" />
     <Compile Include="Models\VideoPlayerViewModel.cs" />

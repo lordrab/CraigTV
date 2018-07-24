@@ -9,16 +9,19 @@ using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using SuperBob.Repository;
 using SuperBob.Model;
-
+using SuperBob.Service.Contract;
+using SuperBob.Service;
 
 namespace SuperBob
 {
    
     public abstract class ReactBaseController<T, ViewListModel, EditViewModel> : Controller where T : class, new()
-        where ViewListModel : new() where EditViewModel : new() 
+        where ViewListModel : class, new() where EditViewModel : class, new() 
 
     {
-        SuperBobEntities db = new SuperBobEntities();
+        SuperBobEntities db = new SuperBobEntities();        
+
+        private ReactFrameWorkService<T,ViewListModel,EditViewModel> _reactFrameWorkService = new ReactFrameWorkService<T,ViewListModel,EditViewModel>();        
 
         public virtual ReactListResultModel<ViewListModel> GetListData()
         {
@@ -100,13 +103,17 @@ namespace SuperBob
 
         public virtual ActionResult DisplayList()
         {
-            var model = GetListData();
+            // using manually created service to replace method in this abstract class
+            // var model = GetListData();
+            var model = _reactFrameWorkService.GetListData();
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public virtual ActionResult EditData(int id)
         {
-            var createModel = CreateEditDataModel(id);
+            // using manually created service to replace method in this abstract class
+            var createModel = _reactFrameWorkService.CreateEditDataModel(id);
+           // var createModel = CreateEditDataModel(id);
             return Json(createModel, JsonRequestBehavior.AllowGet);
         }
        
@@ -114,7 +121,8 @@ namespace SuperBob
         {
             // map table class model to popup create/edit model
             ReactCreateEditDataModel<EditViewModel> createModel = new ReactCreateEditDataModel<EditViewModel>();
-
+            
+            
             var ViewModelProps = typeof(EditViewModel).GetProperties();
             List<ReactPopupModel> popupDisplayModel = new List<ReactPopupModel>();
 

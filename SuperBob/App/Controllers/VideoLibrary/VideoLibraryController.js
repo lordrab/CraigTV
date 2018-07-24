@@ -2,7 +2,7 @@
 app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
    
     $scope.CustomAdd = function (index, rowIndex, superListAddToModel) {
-        console.log(index)
+        
     var modalId = $uibModal.open({
         template: `<div class="modal-content">
                         <div class="modal-header">Upload Video</div>
@@ -122,7 +122,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
 
                     if ($scope.uploaded < $scope.fileSize) {
 
-                        if (fileLock == false) {
+                        if (fileLock === false) {
                             fileLock = true;
                             var leftToDownload = $scope.fileSize - $scope.uploaded;
 
