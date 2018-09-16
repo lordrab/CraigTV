@@ -5,11 +5,15 @@
 <script src="~/App/Controllers/VideoLibrary/VideoLibraryController.js"></script>
 
 
-<div ng-controller="videoLibraryCtrl">
-
-    <super-list mvccontroller="VideoLibrary" add-Function="CustomAdd" ></super-list>
-
-    
+<div ng-controller="videoLibraryCtrl"  class="shareddiv-top">
+    <div class="container">
+        <div class="row" >
+            <div class="col-sm-12">
+                <super-list mvccontroller="VideoLibrary" add-Function="CustomAdd"></super-list>
+            </div>
+        </div>
+        
+    </div>   
 </div>
 
 

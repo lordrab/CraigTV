@@ -38,4 +38,25 @@ namespace SuperBob.Models
         public int VideoLibraryId { get; set; }
         public List<ReactDropDownModel> VideoLibrary { get; set; }
     }
+
+    public class VideoPlayerListModel
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Gerne { get; set; }
+        public string FileName { get; set; }
+        public int GerneId { get; set; }
+    }
+
+    public class VideoPlayerPLayLists
+    {
+        public int Id { get; set; }
+        public string PlayListName { get; set; }
+    }
+
+    public class VideoPLayerAddLibrary
+    {
+        public int PlayListId { get; set; }
+        public int LibraryId { get; set; }
+    }
 }

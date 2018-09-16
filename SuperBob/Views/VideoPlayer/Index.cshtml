@@ -3,45 +3,58 @@
     ViewBag.Title = "Index";
 }
 
-<script src="~/App/Controllers/VideoLibrary/VideoPlayerController.js"></script>
+<script src="~/App/Controllers/VideoPlayer/VideoPlayerController.js"></script>
 
-<div ng-controller="videoPlayerCtrl">
-    <div ng-show="addVideoHide.masterPlayList">
-        <super-list mvccontroller="VideoPlayer" add-Function="addVideoList"></super-list>
-    </div>
+<div ng-controller="videoPlayerCtrl" class="shareddiv-top">
+    <div class="container">
+        <div class="row" ng-show="showPlayer">
+            <div class="col-sm-12 videoplayer-div">
+                <video id="videoPlayer" class="video-js videoplayer-div"></video>               
+            </div>
+            <div class="col-sm-10">
 
-    @*<video id="videoPlayer" class="video-js"></video>*@
+            </div>
+            <div class="col-sm-2" style="margin-top: 20px;">
+                <button class="btn sharedbutton" ng-click="showList()">Back to List</button>
+            </div>
+        </div>
+        <div class="row" ng-show="showVideoList">
+            <div class="col-sm-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <select ng-model="playListId" class="col-sm-12" ng-options="x.Id as x.PlayListName for x in videoPLayList" selected="playListId"></select>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn sharedbutton sharedbutton-add" ng-click="addPlayList()">Add PlayList</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn sharedbutton sharedbutton-add" ng-click="addVideo()">Add Video</button>
+                        </div>
 
-    <div ng-show="addVideoHide.playListName">
-        <br />
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-11">
-                    <div class="form-group">
-                        
-                        <label>PlayList Name</label>
-                        <input type="text" class="form-control" ng-model="playListModel.Name" />
+                    </div>
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Title</th>
+                                <th>Gerne</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="row in videoData">
+                                <td ng-click="playVideo($index)">{{row.Title}}</td>
+                                <td>{{row.Gerne}}</td>
+                                <td><button class="btn sharedbutton" ng-click="playVideo($index)">Play</button>
+                                <button class="btn sharedbutton-delete" ng-click="deleteVideo($index)">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-
-                <div class="col-sm-1">
-                    <button style="margin-top: 25px;" class="btn btn-primary" ng-click="addPlayList()" ng-disabled="playListModel.Name == ''">Add PLayList</button>
-                </div>
-            </div>
-            <div class="row" ng-show="addVideoHide.playListVideos">
-                <div class="col-sm-12">
-                    <div id="bob"></div>
-                </div>
-                
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <button class="btn btn-primary" style="float: right;" ng-click="closeVideoPLayList()">Close</button>
-
-                </div>
+               
             </div>
         </div>
     </div>
+    
 </div>
 
 

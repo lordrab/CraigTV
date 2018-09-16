@@ -85,6 +85,8 @@
     <Compile Include="Contract\IUserService.cs" />
     <Compile Include="Contract\IVideoLibraryService.cs" />
     <Compile Include="GenreService.cs" />
+    <Compile Include="Models\PlayListVideoService.cs" />
+    <Compile Include="Models\SharedServiceModel.cs" />
     <Compile Include="PlayListService.cs" />
     <Compile Include="PlayListVideoService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

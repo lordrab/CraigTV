@@ -8,9 +8,12 @@
     @Scripts.Render("~/bundles/modernizr")
     <script src="~/Scripts/jquery-1.10.2.js"></script>
 
-    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
-    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+    @*<link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">*@
 
+    <link href="~/Content/video-js.css" rel="stylesheet" />
+    <link href="~/App/CSS/Shared/Main.css" rel="stylesheet" />
+    @*<script src="http://vjs.zencdn.net/6.6.3/video.js"></script>*@
+    <script src="~/Scripts/video.js"></script>
 
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap.js"></script>
@@ -20,6 +23,7 @@
     <script src="~/App/Directive/SuperList.js"></script>
 
     <script src="~/App/Service/YesNoPopupService.js"></script>
+    <script src="~/App/Service/InputModelService.js"></script>
     <link href="~/App/CSS/SuperList.css" rel="stylesheet" />
 </head>
 <body ng-app="superBob">

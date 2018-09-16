@@ -72,6 +72,7 @@ namespace SuperBob.Controllers
 
         public ActionResult Upload(Upload file)
         {
+            var guid = Guid.NewGuid().ToString();
             if (file.fileData == null)
             {
                 return Json(new { success = false, writeSuccess = false }, JsonRequestBehavior.AllowGet);
@@ -82,7 +83,7 @@ namespace SuperBob.Controllers
                 var bytes = Convert.FromBase64String(file.fileData);
                 // var savedFile = @"c:/upload/" + file.fileName;
                 var imagesDir = System.Web.HttpContext.Current.Server.MapPath("~/Videos/");
-                var savedFile = imagesDir + "TestVid.mp4";
+                var savedFile = imagesDir + file.fileName.Replace(" ", "");
 
                 if (file.EndOfFile)
                 {
@@ -107,7 +108,7 @@ namespace SuperBob.Controllers
                 }
 
 
-                return Json(new { success = true, writeSuccess = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, writeSuccess = true}, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -132,7 +133,7 @@ namespace SuperBob.Controllers
             {
                 VideoLibrary addModel = new VideoLibrary()
                 {
-                    FileName = model.fileName,
+                    FileName = model.fileName.Replace(" ", ""),
                     Name = model.videoName,
                     Description = model.videoDescription,
                     GenreId = model.genreType

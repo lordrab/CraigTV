@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Linq.Expressions;
 
 namespace SuperBob.Repository
 {
@@ -15,5 +16,6 @@ namespace SuperBob.Repository
         T Add(T model, bool persist = false);
         void Delete(int id);
         void Update(T model);
+        IEnumerable<T> Get(Expression<Func<T, bool>> predicate);
     }
 }

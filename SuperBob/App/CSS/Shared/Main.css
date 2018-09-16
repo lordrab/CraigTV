@@ -1,0 +1,91 @@
+﻿body {
+}
+
+.videoplayer-div {
+    
+    width: 100%;
+    margin-top:10px;
+}
+
+.shareddiv-top {
+    margin-top: 30px;
+}
+.sharedbutton {
+    height: 28px;
+    background-color: #0f6c96;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton:focus {    
+    background-color: #0f6c96;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+}
+.sharedbutton:hover {   
+    background-color: #0f6c96;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+}
+.sharedbutton-add {
+    margin-bottom: 10px;
+}
+.sharedbutton-delete {
+    height: 28px;
+    background-color: #ee5a52;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton-delete:hover {
+    height: 28px;
+    background-color: #ee5a52;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton-delete:focus {
+    height: 28px;
+    background-color: #ee5a52;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton-edit {
+    height: 28px;
+    background-color: #65ce81;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton-edit:hover {
+    height: 28px;
+    background-color: #65ce81;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton-edit:active {
+    height: 28px;
+    background-color: #65ce81;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}
+.sharedbutton-edit:focus {
+    height: 28px;
+    background-color: #65ce81;
+    /*margin: 0px;*/
+    color: #ffffff;
+    padding: 2px;
+    min-width: 50px;
+}

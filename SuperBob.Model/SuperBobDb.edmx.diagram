@@ -4,24 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="943f1ab22a9742ab865eb3f7338b681f" Name="Diagram1">
-        <EntityTypeShape EntityType="SuperBobModel.Genre" Width="1.5" PointX="0.75" PointY="15.75" />
-        <EntityTypeShape EntityType="SuperBobModel.Login" Width="1.5" PointX="0.75" PointY="5.375" />
-        <EntityTypeShape EntityType="SuperBobModel.LoginClaim" Width="1.5" PointX="3" PointY="3.75" />
-        <EntityTypeShape EntityType="SuperBobModel.LoginSocialMedia" Width="1.5" PointX="3" PointY="9.25" />
-        <EntityTypeShape EntityType="SuperBobModel.Person" Width="1.5" PointX="3" PointY="11.75" />
-        <EntityTypeShape EntityType="SuperBobModel.PlayList" Width="1.5" PointX="3" PointY="6.5" />
-        <EntityTypeShape EntityType="SuperBobModel.PlayListVideo" Width="1.5" PointX="5.25" PointY="6.5" />
-        <EntityTypeShape EntityType="SuperBobModel.Role" Width="1.5" PointX="3" PointY="1.375" />
-        <EntityTypeShape EntityType="SuperBobModel.VideoLibrary" Width="1.5" PointX="3" PointY="15.375" />
-        <AssociationConnector Association="SuperBobModel.FK_VideoLibrary_Genre" />
-        <AssociationConnector Association="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" />
-        <AssociationConnector Association="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" />
-        <AssociationConnector Association="SuperBobModel.FK_Person_Login" />
-        <AssociationConnector Association="SuperBobModel.FK_PlayList_Login" />
-        <AssociationConnector Association="SuperBobModel.FK_PLayListVideo_PlayList" />
-        <AssociationConnector Association="SuperBobModel.FK_PLayListVideo_VideoLibrary" />
-        <AssociationConnector Association="SuperBobModel.LoginRole" />
+      <Diagram DiagramId="d885ec016fcb46e081868b9ee13548d7" Name="Diagram1">
+        <EntityTypeShape EntityType="SuperBobModel.Genre" Width="1.5" PointX="0.75" PointY="15.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Login" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.LoginClaim" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.LoginSocialMedia" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Person" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.PlayList" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.PlayListVideo" Width="1.5" PointX="5.25" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.Role" Width="1.5" PointX="3" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="SuperBobModel.VideoLibrary" Width="1.5" PointX="3" PointY="15" IsExpanded="true" />
+        <AssociationConnector Association="SuperBobModel.FK_VideoLibrary_Genre" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_Person_Login" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_PlayList_Login" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_PLayListVideo_PlayList" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.FK_PLayListVideo_VideoLibrary" ManuallyRouted="false" />
+        <AssociationConnector Association="SuperBobModel.LoginRole" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

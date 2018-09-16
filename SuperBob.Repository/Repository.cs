@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using SuperBob.Model;
+using System.Linq.Expressions;
 
 namespace SuperBob.Repository
 {
@@ -61,6 +62,11 @@ namespace SuperBob.Repository
                 entry.State = EntityState.Modified;
             }
             _unitOfWork.Commit();
+        }
+
+        public IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
+        {
+            return dbSet.Where(predicate).AsEnumerable();
         }
     }
 }

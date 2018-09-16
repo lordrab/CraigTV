@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="SuperBobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="SuperBobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Genre">
           <Key>
             <PropertyRef Name="Id" />
@@ -261,60 +261,18 @@
             <End Role="VideoLibrary" EntitySet="VideoLibrary" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SuperBobModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="SuperBobEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Genres" EntityType="SuperBobModel.Genre" />
-          <EntitySet Name="Logins" EntityType="SuperBobModel.Login" />
-          <EntitySet Name="LoginClaims" EntityType="SuperBobModel.LoginClaim" />
-          <EntitySet Name="LoginSocialMedias" EntityType="SuperBobModel.LoginSocialMedia" />
-          <EntitySet Name="People" EntityType="SuperBobModel.Person" />
-          <EntitySet Name="PlayLists" EntityType="SuperBobModel.PlayList" />
-          <EntitySet Name="PlayListVideos" EntityType="SuperBobModel.PlayListVideo" />
-          <EntitySet Name="Roles" EntityType="SuperBobModel.Role" />
-          <EntitySet Name="VideoLibraries" EntityType="SuperBobModel.VideoLibrary" />
-          <AssociationSet Name="FK_VideoLibrary_Genre" Association="SuperBobModel.FK_VideoLibrary_Genre">
-            <End Role="Genre" EntitySet="Genres" />
-            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_LoginClaim_dbo_Login_LoginId" Association="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="LoginClaim" EntitySet="LoginClaims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_LoginSocialMedia_dbo_Login_LoginId" Association="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="LoginSocialMedia" EntitySet="LoginSocialMedias" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Person_Login" Association="SuperBobModel.FK_Person_Login">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="Person" EntitySet="People" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlayList_Login" Association="SuperBobModel.FK_PlayList_Login">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="PlayList" EntitySet="PlayLists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PLayListVideo_PlayList" Association="SuperBobModel.FK_PLayListVideo_PlayList">
-            <End Role="PlayList" EntitySet="PlayLists" />
-            <End Role="PlayListVideo" EntitySet="PlayListVideos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PLayListVideo_VideoLibrary" Association="SuperBobModel.FK_PLayListVideo_VideoLibrary">
-            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
-            <End Role="PlayListVideo" EntitySet="PlayListVideos" />
-          </AssociationSet>
-          <AssociationSet Name="LoginRole" Association="SuperBobModel.LoginRole">
-            <End Role="Login" EntitySet="Logins" />
-            <End Role="Role" EntitySet="Roles" />
-          </AssociationSet>
-        </EntityContainer>
         <EntityType Name="Genre">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="VideoLibraries" Relationship="SuperBobModel.FK_VideoLibrary_Genre" FromRole="Genre" ToRole="VideoLibrary" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="VideoLibraries" Relationship="Self.FK_VideoLibrary_Genre" FromRole="Genre" ToRole="VideoLibrary" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -331,12 +289,12 @@
           <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="LoginClaims" Relationship="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="Login" ToRole="LoginClaim" />
-          <NavigationProperty Name="LoginSocialMedias" Relationship="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="Login" ToRole="LoginSocialMedia" />
-          <NavigationProperty Name="Person" Relationship="SuperBobModel.FK_Person_Login" FromRole="Login" ToRole="Person" />
-          <NavigationProperty Name="PlayLists" Relationship="SuperBobModel.FK_PlayList_Login" FromRole="Login" ToRole="PlayList" />
-          <NavigationProperty Name="Roles" Relationship="SuperBobModel.LoginRole" FromRole="Login" ToRole="Role" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="LoginClaims" Relationship="Self.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="Login" ToRole="LoginClaim" />
+          <NavigationProperty Name="LoginSocialMedias" Relationship="Self.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="Login" ToRole="LoginSocialMedia" />
+          <NavigationProperty Name="Person" Relationship="Self.FK_Person_Login" FromRole="Login" ToRole="Person" />
+          <NavigationProperty Name="PlayLists" Relationship="Self.FK_PlayList_Login" FromRole="Login" ToRole="PlayList" />
+          <NavigationProperty Name="Roles" Relationship="Self.LoginRole" FromRole="Login" ToRole="Role" />
         </EntityType>
         <EntityType Name="LoginClaim">
           <Key>
@@ -346,7 +304,7 @@
           <Property Name="LoginId" Type="Int32" Nullable="false" />
           <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="LoginClaim" ToRole="Login" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_dbo_LoginClaim_dbo_Login_LoginId" FromRole="LoginClaim" ToRole="Login" />
         </EntityType>
         <EntityType Name="LoginSocialMedia">
           <Key>
@@ -354,29 +312,29 @@
             <PropertyRef Name="ProviderKey" />
             <PropertyRef Name="LoginId" />
           </Key>
-          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="LoginId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="LoginSocialMedia" ToRole="Login" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_dbo_LoginSocialMedia_dbo_Login_LoginId" FromRole="LoginSocialMedia" ToRole="Login" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_Person_Login" FromRole="Person" ToRole="Login" />
+          <Property Name="FirstName" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_Person_Login" FromRole="Person" ToRole="Login" />
         </EntityType>
         <EntityType Name="PlayList">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="LoginId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Login" Relationship="SuperBobModel.FK_PlayList_Login" FromRole="PlayList" ToRole="Login" />
-          <NavigationProperty Name="PlayListVideos" Relationship="SuperBobModel.FK_PLayListVideo_PlayList" FromRole="PlayList" ToRole="PlayListVideo" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_PlayList_Login" FromRole="PlayList" ToRole="Login" />
+          <NavigationProperty Name="PlayListVideos" Relationship="Self.FK_PLayListVideo_PlayList" FromRole="PlayList" ToRole="PlayListVideo" />
         </EntityType>
         <EntityType Name="PlayListVideo">
           <Key>
@@ -385,32 +343,32 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PlayListId" Type="Int32" Nullable="false" />
           <Property Name="VideoLibraryId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PlayList" Relationship="SuperBobModel.FK_PLayListVideo_PlayList" FromRole="PlayListVideo" ToRole="PlayList" />
-          <NavigationProperty Name="VideoLibrary" Relationship="SuperBobModel.FK_PLayListVideo_VideoLibrary" FromRole="PlayListVideo" ToRole="VideoLibrary" />
+          <NavigationProperty Name="PlayList" Relationship="Self.FK_PLayListVideo_PlayList" FromRole="PlayListVideo" ToRole="PlayList" />
+          <NavigationProperty Name="VideoLibrary" Relationship="Self.FK_PLayListVideo_VideoLibrary" FromRole="PlayListVideo" ToRole="VideoLibrary" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Logins" Relationship="SuperBobModel.LoginRole" FromRole="Role" ToRole="Login" />
+          <Property Name="RoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Logins" Relationship="Self.LoginRole" FromRole="Role" ToRole="Login" />
         </EntityType>
         <EntityType Name="VideoLibrary">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="200" FixedLength="true" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="200" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="GenreId" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Genre" Relationship="SuperBobModel.FK_VideoLibrary_Genre" FromRole="VideoLibrary" ToRole="Genre" />
-          <NavigationProperty Name="PlayListVideos" Relationship="SuperBobModel.FK_PLayListVideo_VideoLibrary" FromRole="VideoLibrary" ToRole="PlayListVideo" />
+          <NavigationProperty Name="Genre" Relationship="Self.FK_VideoLibrary_Genre" FromRole="VideoLibrary" ToRole="Genre" />
+          <NavigationProperty Name="PlayListVideos" Relationship="Self.FK_PLayListVideo_VideoLibrary" FromRole="VideoLibrary" ToRole="PlayListVideo" />
         </EntityType>
         <Association Name="FK_VideoLibrary_Genre">
-          <End Type="SuperBobModel.Genre" Role="Genre" Multiplicity="1" />
-          <End Type="SuperBobModel.VideoLibrary" Role="VideoLibrary" Multiplicity="*" />
+          <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
+          <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Genre">
               <PropertyRef Name="Id" />
@@ -421,10 +379,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_LoginClaim_dbo_Login_LoginId">
-          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1">
+          <End Role="Login" Type="Self.Login" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="SuperBobModel.LoginClaim" Role="LoginClaim" Multiplicity="*" />
+          <End Role="LoginClaim" Type="Self.LoginClaim" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
@@ -435,10 +393,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_LoginSocialMedia_dbo_Login_LoginId">
-          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1">
+          <End Role="Login" Type="Self.Login" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="SuperBobModel.LoginSocialMedia" Role="LoginSocialMedia" Multiplicity="*" />
+          <End Role="LoginSocialMedia" Type="Self.LoginSocialMedia" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
@@ -449,8 +407,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Person_Login">
-          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1" />
-          <End Type="SuperBobModel.Person" Role="Person" Multiplicity="0..1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
@@ -461,8 +419,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PlayList_Login">
-          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="1" />
-          <End Type="SuperBobModel.PlayList" Role="PlayList" Multiplicity="*" />
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="PlayList" Type="Self.PlayList" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Login">
               <PropertyRef Name="Id" />
@@ -473,8 +431,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PLayListVideo_PlayList">
-          <End Type="SuperBobModel.PlayList" Role="PlayList" Multiplicity="1" />
-          <End Type="SuperBobModel.PlayListVideo" Role="PlayListVideo" Multiplicity="*" />
+          <End Role="PlayList" Type="Self.PlayList" Multiplicity="1" />
+          <End Role="PlayListVideo" Type="Self.PlayListVideo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PlayList">
               <PropertyRef Name="Id" />
@@ -485,8 +443,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PLayListVideo_VideoLibrary">
-          <End Type="SuperBobModel.VideoLibrary" Role="VideoLibrary" Multiplicity="1" />
-          <End Type="SuperBobModel.PlayListVideo" Role="PlayListVideo" Multiplicity="*" />
+          <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="1" />
+          <End Role="PlayListVideo" Type="Self.PlayListVideo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="VideoLibrary">
               <PropertyRef Name="Id" />
@@ -497,10 +455,53 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="LoginRole">
-          <End Type="SuperBobModel.Login" Role="Login" Multiplicity="*" />
-          <End Type="SuperBobModel.Role" Role="Role" Multiplicity="*" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <End Role="Role" Type="Self.Role" Multiplicity="*" />
         </Association>
-        </Schema>
+        <EntityContainer Name="SuperBobEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Genres" EntityType="Self.Genre" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="LoginClaims" EntityType="Self.LoginClaim" />
+          <EntitySet Name="LoginSocialMedias" EntityType="Self.LoginSocialMedia" />
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <EntitySet Name="PlayLists" EntityType="Self.PlayList" />
+          <EntitySet Name="PlayListVideos" EntityType="Self.PlayListVideo" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="VideoLibraries" EntityType="Self.VideoLibrary" />
+          <AssociationSet Name="FK_VideoLibrary_Genre" Association="Self.FK_VideoLibrary_Genre">
+            <End Role="Genre" EntitySet="Genres" />
+            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_LoginClaim_dbo_Login_LoginId" Association="Self.FK_dbo_LoginClaim_dbo_Login_LoginId">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginClaim" EntitySet="LoginClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_LoginSocialMedia_dbo_Login_LoginId" Association="Self.FK_dbo_LoginSocialMedia_dbo_Login_LoginId">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginSocialMedia" EntitySet="LoginSocialMedias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Person_Login" Association="Self.FK_Person_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlayList_Login" Association="Self.FK_PlayList_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="PlayList" EntitySet="PlayLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PLayListVideo_PlayList" Association="Self.FK_PLayListVideo_PlayList">
+            <End Role="PlayList" EntitySet="PlayLists" />
+            <End Role="PlayListVideo" EntitySet="PlayListVideos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PLayListVideo_VideoLibrary" Association="Self.FK_PLayListVideo_VideoLibrary">
+            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
+            <End Role="PlayListVideo" EntitySet="PlayListVideos" />
+          </AssociationSet>
+          <AssociationSet Name="LoginRole" Association="Self.LoginRole">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -509,100 +510,100 @@
           <EntitySetMapping Name="Genres">
             <EntityTypeMapping TypeName="SuperBobModel.Genre">
               <MappingFragment StoreEntitySet="Genre">
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Logins">
             <EntityTypeMapping TypeName="SuperBobModel.Login">
               <MappingFragment StoreEntitySet="Login">
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LoginClaims">
             <EntityTypeMapping TypeName="SuperBobModel.LoginClaim">
               <MappingFragment StoreEntitySet="LoginClaim">
-                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
-                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LoginSocialMedias">
             <EntityTypeMapping TypeName="SuperBobModel.LoginSocialMedia">
               <MappingFragment StoreEntitySet="LoginSocialMedia">
-                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
-                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="SuperBobModel.Person">
               <MappingFragment StoreEntitySet="Person">
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PlayLists">
             <EntityTypeMapping TypeName="SuperBobModel.PlayList">
               <MappingFragment StoreEntitySet="PlayList">
-                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PlayListVideos">
             <EntityTypeMapping TypeName="SuperBobModel.PlayListVideo">
               <MappingFragment StoreEntitySet="PlayListVideo">
-                <ScalarProperty Name="VideoLibraryId" ColumnName="VideoLibraryId" />
-                <ScalarProperty Name="PlayListId" ColumnName="PlayListId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PlayListId" ColumnName="PlayListId" />
+                <ScalarProperty Name="VideoLibraryId" ColumnName="VideoLibraryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="SuperBobModel.Role">
               <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="VideoLibraries">
             <EntityTypeMapping TypeName="SuperBobModel.VideoLibrary">
               <MappingFragment StoreEntitySet="VideoLibrary">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <AssociationSetMapping Name="LoginRole" TypeName="SuperBobModel.LoginRole" StoreEntitySet="LoginRole">
-            <EndProperty Name="Role">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
             <EndProperty Name="Login">
               <ScalarProperty Name="Id" ColumnName="LoginId" />
+            </EndProperty>
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

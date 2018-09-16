@@ -237,15 +237,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\App.js" />
-    <Content Include="App\Controllers\VideoLibrary\VideoPlayerController.js" />
+    <Content Include="App\Controllers\VideoPlayer\VideoPlayerController.js" />
+    <Content Include="App\CSS\Shared\Main.css" />
     <Content Include="App\Directive\SuperList.js" />
     <Content Include="App\Controllers\User\UserController.js" />
     <Content Include="App\Controllers\VideoLibrary\VideoLibraryController.js" />
     <Content Include="App\CSS\SuperList.css" />
+    <Content Include="App\Service\InputModelService.js" />
     <Content Include="App\Service\YesNoPopupService.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
+    <Content Include="Content\video-js.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -378,6 +381,7 @@
     <Content Include="Content\bootstrap\mixins\_border-radius.scss" />
     <Content Include="Content\bootstrap\mixins\_background-variant.scss" />
     <Content Include="Content\bootstrap\mixins\_alerts.scss" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -1128,6 +1132,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\video.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

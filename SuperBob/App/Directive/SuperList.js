@@ -10,7 +10,7 @@
             displayListData: '='
         },
         template: `<div class="container"><div class="row">
-                <button class="btn btn-primary addButton" ng-click="AddRecord(0)">Add</button>
+                <button class="btn sharedbutton" ng-click="AddRecord(0)">Add</button>
 
                 </div>
                 <div class="row">
@@ -22,8 +22,8 @@
                 <td ng-repeat="(key,value) in row" ng-if="row[key].display">                  
                 <span >{{row[key].value}}</span>
                 </td>                
-                <td><button class="btn btn-success" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
-                <button class="btn btn-danger" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
+                <td><button class="btn sharedbutton-edit" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
+                <button class="btn sharedbutton-delete" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
                 <div class="test"></div>
                 </td>
                 
@@ -121,7 +121,7 @@
                     method: 'get'
                 }).then(function (response) {
                     $scope.propertyNames = response.data.PropertyNames;
-
+                    
                     for (i = 0; i < response.data.DataList.length; i++) {
                         $scope.createListModel(response.data.DataList[i])
                     }

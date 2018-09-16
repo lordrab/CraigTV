@@ -1,8 +1,8 @@
 ﻿
 app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
-   
-    $scope.CustomAdd = function (index, rowIndex, superListAddToModel) {
-        
+
+    $scope.CustomAdd = function (index, rowIndex, superListAddToModel) {        
+
     var modalId = $uibModal.open({
         template: `<div class="modal-content">
                         <div class="modal-header">Upload Video</div>
@@ -10,28 +10,50 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                          <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                 <label>Name</name>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                 <input type="text" class="form-control" ng-model="model.videoName"/>
-                                
+                                 </div>
+                                </div>
                                 </div>
                             </div>
                          </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                 <label>Video Genre</name>
+                                </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                 <select class="form-control" ng-model="model.genreType">
                                 <option ng-repeat="x in genreData" value="{{x.id}}">{{x.genreType}}</option>
                                 </select>
                                 </div>
+                                </div>
+                                </div>
                             </div>
                          </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                 <label>Description</name>
+                                </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                 <textarea class="form-control" ng-model="model.videoDescription">
                                 </textarea>
+                                </div></div>
                                 </div>
                             </div>
                          </div>
@@ -75,7 +97,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
         keyboard: false,
         controller: function ($scope) {
             $scope.disableCancel = false;
-            $scope.model = { fileName: '', videoName: '', genreType: 0, videoDescription: ''}
+            $scope.model = { fileName: '', videoName: '', genreType: 1, videoDescription: ''}
             $scope.genreData = [];
             $scope.uploadFileName = 'Click Browse to select file....';
             
@@ -88,11 +110,30 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                     $scope.genreData.push(rowModel)
                 }                
             })
-        
+
+            if (rowIndex != 0) {
+                console.log(index)
+                var data = { id: index };
+                $http({
+                    url: '/VideoLibrary/EditData',
+                    method: 'post',
+                    data: data
+                }).then(function (response) {
+                    console.log(response)
+                    $scope.model.videoName = response.data.Model.Name;
+                    $scope.model.fileName = response.data.Model.FileName;
+                    $scope.model.genreType = response.data.Model.GenreId;
+                   // $scope.model.videoDescription = response.data.Model.GenreId;
+                })
+            }
+
             $scope.uploadFile = function (test) {
                 $scope.uploadFileName = test[0].name;
                 // now trigger a view model update
                 $scope.model.fileName = test[0].name;
+                if ($scope.model.videoName == "") {
+                    $scope.model.videoName = test[0].name.slice(0, -4);
+                }               
                 $scope.$apply();
             }
 
@@ -106,7 +147,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
 
                 var filetype = file.type;
                 var filename = file.name
-                var block = 3000000;
+                var block = 6000000;
                 var filePointer = 0;
                 var fileLock = false;
                 var writeSuccess = false;
@@ -119,13 +160,14 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                     if ($scope.fileSize < block) {
                         block = $scope.fileSize;
                     }
-
+                    //console.log($scope.fileSize)
+                    //console.log($scope.uploaded)
                     if ($scope.uploaded < $scope.fileSize) {
 
                         if (fileLock === false) {
                             fileLock = true;
                             var leftToDownload = $scope.fileSize - $scope.uploaded;
-
+                           
                             if (leftToDownload < block) {
                                 block = leftToDownload;
                                 endOfFile = true;
@@ -136,7 +178,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                             fileData.onloadend = function (evt) {
                                 if (evt.target.readyState == FileReader.DONE) {
                                     var data = { fileName: filename, fileData: getB64Str(evt.target.result), contentType: "ss", endOfFile: endOfFile }
-
+                                    
                                     $.ajax({
                                         url: '/VideoLibrary/Upload',
                                         type: 'post',
@@ -155,10 +197,8 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                                             if (endOfFile != true) {
                                                 fileLock = false;
                                             } else {                                             
-                                                clearInterval(refreshIntervalId);
-                                                
+                                                //clearInterval(refreshIntervalId);  not needed !!                                            
                                             }
-
                                         },
                                         error: function (response) {
                                             console.log(response)
@@ -166,7 +206,6 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                                     })
                                 }
                             }
-
                             fileData.readAsArrayBuffer(blob);
                         }
                     } else {
@@ -182,8 +221,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                                 //superListModel.push(response.data.displayListModel)
                                 var saveModel = {
                                     Id: response.data.displayListModel.Id, GenreType:  response.data.displayListModel.GenreType,
-                                    GenreId: response.data.displayListModel.GenreType, Name:  response.data.displayListModel.Name 
-                                     
+                                    GenreId: response.data.displayListModel.GenreType, Name:  response.data.displayListModel.Name                                      
                                 }
                                 superListAddToModel(saveModel);
                                 modalId.close();
