@@ -28,7 +28,7 @@ namespace SuperBob.Service
 
     public class ReactListResultModel<T>
     {      
-        
+        public int TotalDataListSize { get; set; }
         public List<T> DataList { get; set; }
         public List<ReactPopupModel> PropertyNames { get; set; }
              

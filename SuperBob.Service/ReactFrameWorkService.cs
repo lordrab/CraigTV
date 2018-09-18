@@ -167,7 +167,7 @@ namespace SuperBob.Service
             }
         }
 
-        public ReactListResultModel<ViewListModel> GetListData()
+        public ReactListResultModel<ViewListModel> GetListData(int skip, int number)
         {
             ReactListResultModel<ViewListModel> model = new ReactListResultModel<ViewListModel>();
             List<ReactPopupModel> propertyList = new List<ReactPopupModel>();
@@ -213,7 +213,9 @@ namespace SuperBob.Service
             }
             model.PropertyNames = propertyList;
 
-            var modelData = db.Set<Table>().ToList(); ;
+            var allData = db.Set<Table>().ToList();
+            model.TotalDataListSize = allData.Count;
+            var modelData = allData.Skip(skip).Take(number).ToList();
 
 
             List<ViewListModel> listModel = new List<ViewListModel>();

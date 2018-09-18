@@ -36,7 +36,7 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
                 method: 'post',
                 data: { playListId: playListId }
             }).then(function (response) {
-                console.log(response)
+                //console.log(response)
                 $scope.videoData = response.data.VideoList
             });
         }

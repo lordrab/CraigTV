@@ -30,7 +30,13 @@
                 </tr>               
                 </table>
                 </div>
-        <div class="row">{{data.Id}}</div>
+        <div class="row">
+            <nav aria-label="Page navigation example">
+            <ul class="pagination" ng-repeat="x in pagationArray">
+            <li class="page-item"><a class="page-link" href="#" ng-click="pageChanged(x)">{{x}}</a></li>
+                   </ul>
+            </nav>
+                </div>
 </div>
 `,
         controller: function SuperListController($scope, $http, $uibModal) {
@@ -66,6 +72,8 @@
             $scope.propertyNames = [];
             $scope.rowData = [];
             $scope.currentEditId = 0;
+            $scope.dataListStep = 12;
+            $scope.pagationArray = [];
 
             $scope.AddRecord = function (index, rowIndex) {
                 
@@ -87,8 +95,7 @@
                             dataModel: result.data.Model
                         }
                         $scope.DataModal(modal, $scope);
-                    })
-                    
+                    })                   
                 }              
             };
 
@@ -116,18 +123,29 @@
             $scope.form = "";
             
             if (typeof ($scope.displayListData) == 'undefined') {
+                var model = {
+                    skip: 0,
+                    number: $scope.dataListStep
+                }
                 $http({
                     url: $scope.superListData.displayUrl,
-                    method: 'get'
+                    method: 'post',
+                    data: model
                 }).then(function (response) {
+                    //console.log(response)
                     $scope.propertyNames = response.data.PropertyNames;
+                    var bob = response.data.TotalDataListSize / $scope.dataListStep;
                     
+                    var totalPages = Math.round(bob) + 1;
+                    for (i = 1; i <= totalPages; i++) {
+                        $scope.pagationArray.push(i);
+                    }
                     for (i = 0; i < response.data.DataList.length; i++) {
                         $scope.createListModel(response.data.DataList[i])
                     }
                 });
             } else {
-                
+               
                 $http({
                     url: $scope.superListData.displayUrl,
                     method: 'post',
@@ -135,13 +153,13 @@
                 }).then(function (response) {
                     $scope.propertyNames = response.data.PropertyNames;
                     console.log(response.data) 
+                    var bob = response.data.TotalDataListSize / $scope.dataListStep;
+                    console.log(bob)
                     for (i = 0; i < response.data.DataList.length; i++) {
                         $scope.createListModel(response.data.DataList[i])
                     }
-                });
-                
-            }
-           
+                });                
+            }           
            
             $scope.createListModel = function (data) {
                 var model = {};
@@ -158,6 +176,27 @@
 
             $scope.getRowData = function (rowIndex) {
                 return $scope.rowData[rowIndex]
+            }
+
+            $scope.pageChanged = function (page) {               
+                var pageMulti = page - 1;
+                var pageStart = pageMulti * $scope.dataListStep;                
+                var model = {
+                    skip: pageStart,
+                    number: $scope.dataListStep
+                }
+
+                $http({
+                    url: $scope.superListData.displayUrl,
+                    method: 'post',
+                    data: model
+                }).then(function (response) {
+                    //console.log(response)
+                    $scope.rowData = [];
+                    for (i = 0; i < response.data.DataList.length; i++) {
+                        $scope.createListModel(response.data.DataList[i])
+                    }
+                });
             }
 
             $scope.DataModal = function (frameWorkModel, scope) {
@@ -369,6 +408,6 @@
                 });
 
             };
-        }
+        }          
     }
 });

@@ -11,6 +11,6 @@ namespace SuperBob.Service.Contract
         where Table : class, new()
     {
         ReactCreateEditDataModel<EditViewModel> CreateEditDataModel(int id);
-        ReactListResultModel<ViewListModel> GetListData();
+        ReactListResultModel<ViewListModel> GetListData(int skip, int number);
     }
 }

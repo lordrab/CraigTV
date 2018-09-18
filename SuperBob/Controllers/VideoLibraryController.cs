@@ -46,9 +46,9 @@ namespace SuperBob.Controllers
             return Json(createModel, JsonRequestBehavior.AllowGet);
         }
 
-        public override ActionResult DisplayList()
+        public override ActionResult DisplayList(int skip, int number)
         {
-            var model = GetListData();
+            var model = GetListData(skip,number);
             foreach (var m in model.DataList)
             {
                 m.GenreType = _genreService.GetById(m.GenreId).Name.Trim();

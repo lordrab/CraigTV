@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Video PLayer";
 }
 
 <script src="~/App/Controllers/VideoPlayer/VideoPlayerController.js"></script>
@@ -23,7 +23,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-4">
-                            <select ng-model="playListId" class="col-sm-12" ng-options="x.Id as x.PlayListName for x in videoPLayList" selected="playListId"></select>
+                            <select ng-model="playListId" class="col-sm-12" ng-options="x.Id as x.PlayListName for x in videoPLayList" selected="playListId"
+                                    ng-click="playListChanged()"></select>
                         </div>
                         <div class="col-sm-4">
                             <button class="btn sharedbutton sharedbutton-add" ng-click="addPlayList()">Add PlayList</button>
