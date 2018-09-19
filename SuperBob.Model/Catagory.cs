@@ -12,24 +12,18 @@ namespace SuperBob.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class VideoLibrary
+    public partial class Catagory
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public VideoLibrary()
+        public Catagory()
         {
-            this.PlayListVideos = new HashSet<PlayListVideo>();
+            this.VideoLibraries = new HashSet<VideoLibrary>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public string FileName { get; set; }
-        public int GenreId { get; set; }
-        public string Description { get; set; }
-        public int CatagoryId { get; set; }
     
-        public virtual Catagory Catagory { get; set; }
-        public virtual Genre Genre { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlayListVideo> PlayListVideos { get; set; }
+        public virtual ICollection<VideoLibrary> VideoLibraries { get; set; }
     }
 }

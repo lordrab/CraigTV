@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using SuperBob.Service;
+using SuperBob.Service.Models;
 
 namespace SuperBob.Models
 {
@@ -17,7 +18,8 @@ namespace SuperBob.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
+        public int CatagoryId { get; set; }
+        public string CatagoryName { get; set; }
     }
 
     public class VideoLibraryEditViewModel
@@ -28,14 +30,22 @@ namespace SuperBob.Models
         public int GenreId { get; set; }
         public List<ReactDropDownModel> GenreList { get; set; }
         public string FileName { get; set; }
-
     }
 
     public class VideoLibraryAddModel
     {
-        public string fileName { get; set; }
-        public string videoName { get; set; }
-        public int genreType { get; set; }
-        public string videoDescription { get; set; }
+        public int Id { get; set; }
+        public string FileName { get; set; }
+        public string VideoName { get; set; }
+        public int GenreType { get; set; }
+        public int CatagoryName { get; set; }
+        public string VideoDescription { get; set; }
+    }
+
+    public class VideoLibraryEditDropdownModel
+    {
+        public List<GerneListModel> GenreList { get; set; }
+        public List<CatagoryServiceListModel> CatagoryList { get; set; }
+
     }
 }

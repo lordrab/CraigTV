@@ -1,5 +1,5 @@
 ﻿
-app.controller("UserCtrl", function($scope,$http) {
+app.controller("CatagoryCtrl", function($scope,$http) {
 
     $scope.superList = {
         url: 'test',

@@ -12,15 +12,15 @@ using Microsoft.AspNet.Identity;
 namespace SuperBob.Controllers
 {
     [Authorize] 
-    public class UserController : ReactBaseController<Person, PersonListViewModel, PersonListViewModel>
+    public class CatagoryController : ReactBaseController<Catagory, CatagoryListViewModel, CatagoryListViewModel>
     {
         // GET: User
 
-        private IUserService _userService;
+        private ICatagoryService _catagoryService;
 
-        public UserController(IUserService userService)
+        public CatagoryController(ICatagoryService catagoryService)
         {
-            _userService = userService;
+            _catagoryService = catagoryService;
         }
         public ActionResult Index()
         {

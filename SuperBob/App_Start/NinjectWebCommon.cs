@@ -62,7 +62,10 @@ namespace SuperBob.App_Start
                 kernel.Bind<IRepository<VideoLibrary>>().To<Repository<VideoLibrary>>();
                 kernel.Bind<IVideoLibraryService>().To<VideoLibraryService>();
                 kernel.Bind<IRepository<Genre>>().To<Repository<Genre>>();
+                kernel.Bind<IRepository<Catagory>>().To<Repository<Catagory>>();
+
                 kernel.Bind<IGenreService>().To<GenreService>();
+                kernel.Bind<ICatagoryService>().To<CatagoryService>();
 
                 kernel.Bind<IRepository<PlayList>>().To<Repository<PlayList>>();
                 kernel.Bind<IRepository<PlayListVideo>>().To<Repository<PlayListVideo>>();

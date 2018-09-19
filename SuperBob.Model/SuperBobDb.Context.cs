@@ -33,6 +33,7 @@ namespace SuperBob.Model
         public virtual DbSet<PlayList> PlayLists { get; set; }
         public virtual DbSet<PlayListVideo> PlayListVideos { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Catagory> Catagories { get; set; }
         public virtual DbSet<VideoLibrary> VideoLibraries { get; set; }
     }
 }

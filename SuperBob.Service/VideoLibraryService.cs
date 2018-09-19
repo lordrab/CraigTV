@@ -22,8 +22,22 @@ namespace SuperBob.Service
         {
             try
             {
-                _videoLibraryRepository.Add(model);
-                return true;
+                if ( model.Id == 0)
+                {
+                    _videoLibraryRepository.Add(model);
+                    return true;
+                }
+                else
+                {
+                    var data = _videoLibraryRepository.GetById(model.Id);
+                    data.Name = model.Name;
+                    data.GenreId = model.GenreId;
+                    data.CatagoryId = model.CatagoryId;
+                    data.Description = data.Description;
+                    _videoLibraryRepository.Update(data);
+
+                    return true;
+                }
             }
             catch
             {

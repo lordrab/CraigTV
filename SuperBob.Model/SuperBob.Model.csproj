@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Catagory.cs">
+      <DependentUpon>SuperBobDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Genre.cs">
       <DependentUpon>SuperBobDb.tt</DependentUpon>
     </Compile>

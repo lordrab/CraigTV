@@ -4,7 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SuperBobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SuperBobModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Catagory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Genre">
           <Key>
             <PropertyRef Name="Id" />
@@ -96,6 +103,7 @@
           <Property Name="FileName" Type="nchar" MaxLength="200" Nullable="false" />
           <Property Name="GenreId" Type="int" Nullable="false" />
           <Property Name="Description" Type="nchar" MaxLength="200" />
+          <Property Name="CatagoryId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_dbo_LoginClaim_dbo_Login_LoginId">
           <End Role="Login" Type="Self.Login" Multiplicity="1">
@@ -201,6 +209,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_VideoLibrary_Catagory">
+          <End Role="Catagory" Type="Self.Catagory" Multiplicity="1" />
+          <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Catagory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoLibrary">
+              <PropertyRef Name="CatagoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_VideoLibrary_Genre">
           <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
           <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="*" />
@@ -214,6 +234,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="SuperBobModelStoreContainer">
+          <EntitySet Name="Catagory" EntityType="Self.Catagory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Genre" EntityType="Self.Genre" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginClaim" EntityType="Self.LoginClaim" Schema="dbo" store:Type="Tables" />
@@ -256,13 +277,16 @@
             <End Role="VideoLibrary" EntitySet="VideoLibrary" />
             <End Role="PlayListVideo" EntitySet="PlayListVideo" />
           </AssociationSet>
+          <AssociationSet Name="FK_VideoLibrary_Catagory" Association="Self.FK_VideoLibrary_Catagory">
+            <End Role="Catagory" EntitySet="Catagory" />
+            <End Role="VideoLibrary" EntitySet="VideoLibrary" />
+          </AssociationSet>
           <AssociationSet Name="FK_VideoLibrary_Genre" Association="Self.FK_VideoLibrary_Genre">
             <End Role="Genre" EntitySet="Genre" />
             <End Role="VideoLibrary" EntitySet="VideoLibrary" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SuperBobModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -272,7 +296,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="VideoLibraries" Relationship="Self.FK_VideoLibrary_Genre" FromRole="Genre" ToRole="VideoLibrary" />
+          <NavigationProperty Name="VideoLibraries" Relationship="SuperBobModel.FK_VideoLibrary_Genre" FromRole="Genre" ToRole="VideoLibrary" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -344,7 +368,7 @@
           <Property Name="PlayListId" Type="Int32" Nullable="false" />
           <Property Name="VideoLibraryId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="PlayList" Relationship="Self.FK_PLayListVideo_PlayList" FromRole="PlayListVideo" ToRole="PlayList" />
-          <NavigationProperty Name="VideoLibrary" Relationship="Self.FK_PLayListVideo_VideoLibrary" FromRole="PlayListVideo" ToRole="VideoLibrary" />
+          <NavigationProperty Name="VideoLibrary" Relationship="SuperBobModel.FK_PLayListVideo_VideoLibrary" FromRole="PlayListVideo" ToRole="VideoLibrary" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -354,30 +378,6 @@
           <Property Name="RoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Logins" Relationship="Self.LoginRole" FromRole="Role" ToRole="Login" />
         </EntityType>
-        <EntityType Name="VideoLibrary">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="FileName" Type="String" MaxLength="200" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="GenreId" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Genre" Relationship="Self.FK_VideoLibrary_Genre" FromRole="VideoLibrary" ToRole="Genre" />
-          <NavigationProperty Name="PlayListVideos" Relationship="Self.FK_PLayListVideo_VideoLibrary" FromRole="VideoLibrary" ToRole="PlayListVideo" />
-        </EntityType>
-        <Association Name="FK_VideoLibrary_Genre">
-          <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
-          <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Genre">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="VideoLibrary">
-              <PropertyRef Name="GenreId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_LoginClaim_dbo_Login_LoginId">
           <End Role="Login" Type="Self.Login" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -442,18 +442,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PLayListVideo_VideoLibrary">
-          <End Role="VideoLibrary" Type="Self.VideoLibrary" Multiplicity="1" />
-          <End Role="PlayListVideo" Type="Self.PlayListVideo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="VideoLibrary">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlayListVideo">
-              <PropertyRef Name="VideoLibraryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="LoginRole">
           <End Role="Login" Type="Self.Login" Multiplicity="*" />
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
@@ -467,11 +455,6 @@
           <EntitySet Name="PlayLists" EntityType="Self.PlayList" />
           <EntitySet Name="PlayListVideos" EntityType="Self.PlayListVideo" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
-          <EntitySet Name="VideoLibraries" EntityType="Self.VideoLibrary" />
-          <AssociationSet Name="FK_VideoLibrary_Genre" Association="Self.FK_VideoLibrary_Genre">
-            <End Role="Genre" EntitySet="Genres" />
-            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_LoginClaim_dbo_Login_LoginId" Association="Self.FK_dbo_LoginClaim_dbo_Login_LoginId">
             <End Role="Login" EntitySet="Logins" />
             <End Role="LoginClaim" EntitySet="LoginClaims" />
@@ -492,15 +475,83 @@
             <End Role="PlayList" EntitySet="PlayLists" />
             <End Role="PlayListVideo" EntitySet="PlayListVideos" />
           </AssociationSet>
-          <AssociationSet Name="FK_PLayListVideo_VideoLibrary" Association="Self.FK_PLayListVideo_VideoLibrary">
-            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
-            <End Role="PlayListVideo" EntitySet="PlayListVideos" />
-          </AssociationSet>
           <AssociationSet Name="LoginRole" Association="Self.LoginRole">
             <End Role="Login" EntitySet="Logins" />
             <End Role="Role" EntitySet="Roles" />
           </AssociationSet>
+          <EntitySet Name="Catagories" EntityType="SuperBobModel.Catagory" />
+          <EntitySet Name="VideoLibraries" EntityType="SuperBobModel.VideoLibrary" />
+          <AssociationSet Name="FK_VideoLibrary_Catagory" Association="SuperBobModel.FK_VideoLibrary_Catagory">
+            <End Role="Catagory" EntitySet="Catagories" />
+            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VideoLibrary_Genre" Association="SuperBobModel.FK_VideoLibrary_Genre">
+            <End Role="Genre" EntitySet="Genres" />
+            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PLayListVideo_VideoLibrary" Association="SuperBobModel.FK_PLayListVideo_VideoLibrary">
+            <End Role="VideoLibrary" EntitySet="VideoLibraries" />
+            <End Role="PlayListVideo" EntitySet="PlayListVideos" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Catagory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="VideoLibraries" Relationship="SuperBobModel.FK_VideoLibrary_Catagory" FromRole="Catagory" ToRole="VideoLibrary" />
+        </EntityType>
+        <EntityType Name="VideoLibrary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="200" FixedLength="true" Unicode="true" />
+          <Property Name="GenreId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+          <Property Name="CatagoryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Catagory" Relationship="SuperBobModel.FK_VideoLibrary_Catagory" FromRole="VideoLibrary" ToRole="Catagory" />
+          <NavigationProperty Name="Genre" Relationship="SuperBobModel.FK_VideoLibrary_Genre" FromRole="VideoLibrary" ToRole="Genre" />
+          <NavigationProperty Name="PlayListVideos" Relationship="SuperBobModel.FK_PLayListVideo_VideoLibrary" FromRole="VideoLibrary" ToRole="PlayListVideo" />
+        </EntityType>
+        <Association Name="FK_VideoLibrary_Catagory">
+          <End Type="SuperBobModel.Catagory" Role="Catagory" Multiplicity="1" />
+          <End Type="SuperBobModel.VideoLibrary" Role="VideoLibrary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Catagory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoLibrary">
+              <PropertyRef Name="CatagoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VideoLibrary_Genre">
+          <End Type="SuperBobModel.Genre" Role="Genre" Multiplicity="1" />
+          <End Type="SuperBobModel.VideoLibrary" Role="VideoLibrary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoLibrary">
+              <PropertyRef Name="GenreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PLayListVideo_VideoLibrary">
+          <End Type="SuperBobModel.VideoLibrary" Role="VideoLibrary" Multiplicity="1" />
+          <End Type="SuperBobModel.PlayListVideo" Role="PlayListVideo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoLibrary">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlayListVideo">
+              <PropertyRef Name="VideoLibraryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -587,17 +638,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="VideoLibraries">
-            <EntityTypeMapping TypeName="SuperBobModel.VideoLibrary">
-              <MappingFragment StoreEntitySet="VideoLibrary">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="LoginRole" TypeName="SuperBobModel.LoginRole" StoreEntitySet="LoginRole">
             <EndProperty Name="Login">
               <ScalarProperty Name="Id" ColumnName="LoginId" />
@@ -606,6 +646,26 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Catagories">
+            <EntityTypeMapping TypeName="SuperBobModel.Catagory">
+              <MappingFragment StoreEntitySet="Catagory">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VideoLibraries">
+            <EntityTypeMapping TypeName="SuperBobModel.VideoLibrary">
+              <MappingFragment StoreEntitySet="VideoLibrary">
+                <ScalarProperty Name="CatagoryId" ColumnName="CatagoryId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

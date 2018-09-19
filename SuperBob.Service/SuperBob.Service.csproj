@@ -78,6 +78,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CatagoryService.cs" />
+    <Compile Include="Contract\ICatagoryService.cs" />
     <Compile Include="Contract\IGenreService.cs" />
     <Compile Include="Contract\IPlayListService.cs" />
     <Compile Include="Contract\IPlayListVideoService.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Contract\IUserService.cs" />
     <Compile Include="Contract\IVideoLibraryService.cs" />
     <Compile Include="GenreService.cs" />
+    <Compile Include="Models\CatagoryServiceModel.cs" />
     <Compile Include="Models\PlayListVideoService.cs" />
     <Compile Include="Models\SharedServiceModel.cs" />
     <Compile Include="PlayListService.cs" />

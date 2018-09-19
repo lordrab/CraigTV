@@ -21,12 +21,14 @@ namespace SuperBob.Controllers
         // GET: Video
         private IVideoLibraryService _videoLibraryService;
         private IGenreService _genreService;
+        private ICatagoryService _catagoryService;
 
         public VideoLibraryController(IVideoLibraryService videoLibraryService,
-            IGenreService genreService)
+            IGenreService genreService, ICatagoryService catagoryService)
         {
             _videoLibraryService = videoLibraryService;
             _genreService = genreService;
+            _catagoryService = catagoryService;
         }
 
 
@@ -52,6 +54,10 @@ namespace SuperBob.Controllers
             foreach (var m in model.DataList)
             {
                 m.GenreType = _genreService.GetById(m.GenreId).Name.Trim();
+            }
+            foreach(var m in model.DataList)
+            {
+                m.CatagoryName = _catagoryService.GetById(m.CatagoryId).Name;
             }
             return Json(model, JsonRequestBehavior.AllowGet);
         }
@@ -124,7 +130,11 @@ namespace SuperBob.Controllers
                     GenreType = item.Name
                 });
             }
-            return Json(model, JsonRequestBehavior.AllowGet);
+            var catagoryList = _catagoryService.GetCatagoryList();
+            VideoLibraryEditDropdownModel rModel = new VideoLibraryEditDropdownModel();
+            rModel.GenreList = model;
+            rModel.CatagoryList = catagoryList;
+            return Json(rModel, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AddEditVideoLibrary(VideoLibraryAddModel model)
@@ -133,10 +143,12 @@ namespace SuperBob.Controllers
             {
                 VideoLibrary addModel = new VideoLibrary()
                 {
-                    FileName = model.fileName.Replace(" ", ""),
-                    Name = model.videoName,
-                    Description = model.videoDescription,
-                    GenreId = model.genreType
+                    Id = model.Id,
+                    FileName = model.FileName.Replace(" ", ""),
+                    Name = model.VideoName,
+                    Description = model.VideoDescription,
+                    GenreId = model.GenreType,
+                    CatagoryId = model.CatagoryName
                 };
                 _videoLibraryService.AddVideoLibrary(addModel);
                 VideoLibraryListViewModel addToListModel = new VideoLibraryListViewModel()

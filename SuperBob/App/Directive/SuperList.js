@@ -161,17 +161,35 @@
                 });                
             }           
            
-            $scope.createListModel = function (data) {
+            $scope.createListModel = function (data,index) {
                 var model = {};
-                for (p = 0; p < $scope.propertyNames.length; p++) {
-
-                    var value = data[$scope.propertyNames[p].PropertyName];
-                    model[$scope.propertyNames[p].PropertyName] = {
-                        value: value,
-                        display: $scope.propertyNames[p].DisplayProperty
+                
+                if (typeof (index) == 'undefined') {
+                    for (p = 0; p < $scope.propertyNames.length; p++) {
+                        var value = data[$scope.propertyNames[p].PropertyName];
+                        model[$scope.propertyNames[p].PropertyName] = {
+                            value: value,
+                            display: $scope.propertyNames[p].DisplayProperty
+                        }
                     }
+                    $scope.rowData.push(model);
+                } else {
+                    console.log(data)
+                    console.log($scope.rowData[index])
+                    var totalProps = Object.keys(data);
+                    for (i = 0; i < totalProps.length; i++) {
+                        
+                        if (typeof ($scope.rowData[index][totalProps[i]]) != 'undefined') {
+                            $scope.rowData[index][totalProps[i]].value = data[totalProps[i]];
+                        }
+                        
+                        
+                    }
+                    //console.log(index)
+                    //console.log()
+                    //console.log($scope.rowData[index])
                 }
-                $scope.rowData.push(model);                
+                              
             };
 
             $scope.getRowData = function (rowIndex) {
