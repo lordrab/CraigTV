@@ -3,7 +3,7 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
 
     $scope.playListModel = { Name: '', Id: 0 };
     $scope.dataSave = '';
-    $scope.addVideoHide = { masterPlayList: true, playListName: false, playListVideos: false }
+    $scope.addVideoHide = { masterPlayList: true, playListName: false, playListVideos: false };
 
     $scope.showVideoList = true;
     $scope.showPlayer = false;
@@ -23,7 +23,7 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
     }).then(function (response) {
         //console.log(response)
         if (response.data.length != 0) {
-            $scope.videoPLayList = response.data
+            $scope.videoPLayList = response.data;
             $scope.playListId = $scope.videoPLayList[0].Id;
             $scope.getPlayList($scope.playListId);
         }
@@ -37,10 +37,10 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
                 data: { playListId: playListId }
             }).then(function (response) {
                 //console.log(response)
-                $scope.videoData = response.data.VideoList
+                $scope.videoData = response.data.VideoList;
             });
         }
-    }
+    };
 
     $scope.playListChanged = function () {
         $scope.getPlayList($scope.playListId);
@@ -136,7 +136,7 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
         var model = {
             Id: $scope.videoData[$scope.deleteId].Id
         }
-        
+
         $http({
             url: '/VideoPlayer/DeleteFromPlayList',
             method: 'post',
@@ -144,9 +144,9 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
         }).then(function (response) {
             console.log(response)
             if (response.data.Success) {
-                 $scope.videoData.splice($scope.deleteId, 1);
-            }          
-        })
-    }
+                $scope.videoData.splice($scope.deleteId, 1);
+            }
+        });
+    };
 });
 

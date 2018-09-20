@@ -1,6 +1,29 @@
 ﻿
 app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
 
+    $scope.filterList = [];
+    $scope.selectId = 0;
+
+    $scope.filterModel = {
+        filterList: [],
+        selectId: 0,
+        filterChange: function (filterIndex) {
+            console.log(filterIndex)
+        }
+    }
+
+    $http({
+        url: '/VideoLibrary/GetGenreList',
+        method: 'get'
+    }).then(function (response) {
+        console.log(response)
+        $scope.filterModel.filterList.push({ Id: 0, Name: 'All' });
+        for (i = 0; i < response.data.CatagoryList.length; i++) {
+            $scope.filterModel.filterList.push(response.data.CatagoryList[i])
+        }
+        });
+
+
     $scope.CustomAdd = function (index, rowIndex, superListAddToModel) {
 
         var modalId = $uibModal.open({
@@ -89,8 +112,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                                 </div>
                                 <div class="col-sm-4">
                                         <button style="height: 26px;">
-                                        <label for="file" >Browse</label></button>
-                                                                         
+                                        <label for="file" >Browse</label></button>                                                                         
                                 </div>
                             </div>                       
                         <div class="row">

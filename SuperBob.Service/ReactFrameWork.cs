@@ -57,4 +57,11 @@ namespace SuperBob.Service
         public int Value { get; set; }
         public string Text { get; set; }
     }
+
+    public class DisplayDataListPostModel
+    {
+        public int Skip { get; set; }
+        public int Number { get; set; }
+        public string Filter { get; set; }
+    }
 }

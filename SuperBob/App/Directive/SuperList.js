@@ -7,14 +7,22 @@
             saveDataMethod: '@',
             deleteDataMethod: '@',
             addFunction: '=',
-            displayListData: '='
+            displayListData: '=',
+            filterModel: '='
+            
         },
         template: `<div class="container"><div class="row">
+                <div class="col-sm-6">
                 <button class="btn sharedbutton" ng-click="AddRecord(0)">Add</button>
-
+                </div>
+                <div class="col-sm-6">
+                <select ng-model="selectedFilter" ng-options="x.Id as x.Name for x in filterList" selected="selectedFilter"" class="col-sm-5"
+                ng-click="changeFilter(selectedFilter)">
+                </select>
+                </div>
                 </div>
                 <div class="row">
-                <table class="table table-bordered"><tr >
+                <table class="table table-bordered shared-table"><tr >
                 <th ng-repeat="property in propertyNames" ng-show="property.DisplayProperty">{{property.DisplayName}}</th>
                 <th>Action</th>
                 </tr>
@@ -25,8 +33,7 @@
                 <td><button class="btn sharedbutton-edit" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
                 <button class="btn sharedbutton-delete" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
                 <div class="test"></div>
-                </td>
-                
+                </td>                
                 </tr>               
                 </table>
                 </div>
@@ -49,7 +56,7 @@
                 addFunction: $scope.addFunction
 
             };
-
+            
             // if as different display list method has been passed use it
             if (typeof ($scope.listDataMethod) != 'undefined') {
                 $scope.superListData.displayUrl = '/' + $scope.mvccontroller + '/' + $scope.listDataMethod;
@@ -68,13 +75,17 @@
             if (typeof ($scope.editDataMethod) != 'undefined') {
                 $scope.superListData.addEditUrl = '/' + $scope.mvccontroller + '/' + $scope.editDataMethod;
             }
-
+            console.log($scope.filterModel)
             $scope.propertyNames = [];
             $scope.rowData = [];
             $scope.currentEditId = 0;
-            $scope.dataListStep = 14;
+            $scope.dataListStep = 13;
             $scope.pagationArray = [];
             $scope.form = "";
+            $scope.filterList = [];
+            $scope.selectedFilter = $scope.filterModel.selectId;
+            $scope.filterList = $scope.filterModel.filterList;   
+            $scope.changeFilter = $scope.filterModel.filterChange;
 
             $scope.AddRecord = function (index, rowIndex) {
 
@@ -82,8 +93,7 @@
 
                     $scope.superListData.addFunction(index, rowIndex, $scope.createListModel, $scope.getRowData);
 
-                } else {
-                    console.log($scope.superListData.addEditUrl)
+                } else {                   
                     $scope.currentEditId = rowIndex;
                     $http({
                         url: $scope.superListData.addEditUrl,
@@ -106,7 +116,6 @@
                         url: url,
                         data: { id: index }
                     }).then(function (result) {
-
                         if (result.data.Success) {
                             $scope.rowData.splice(rowIndex, 1);
                         }
@@ -119,8 +128,9 @@
 
             if (typeof ($scope.displayListData) === 'undefined') {
                 var model = {
-                    skip: 0,
-                    number: $scope.dataListStep
+                    Skip: 0,
+                    Number: $scope.dataListStep,
+                    filter: $scope.selectedFilter
                 };
                 $http({
                     url: $scope.superListData.displayUrl,
@@ -147,9 +157,9 @@
                     data: $scope.displayListData
                 }).then(function (response) {
                     $scope.propertyNames = response.data.PropertyNames;
-                    console.log(response.data)
+                    //console.log(response.data)
                     var bob = response.data.TotalDataListSize / $scope.dataListStep;
-                    console.log(bob)
+                    //console.log(bob)
                     for (i = 0; i < response.data.DataList.length; i++) {
                         $scope.createListModel(response.data.DataList[i]);
                     }

@@ -23,7 +23,7 @@ namespace SuperBob
 
         private ReactFrameWorkService<T,ViewListModel,EditViewModel> _reactFrameWorkService = new ReactFrameWorkService<T,ViewListModel,EditViewModel>();        
 
-        public virtual ReactListResultModel<ViewListModel> GetListData(int skip, int number)
+        public virtual ReactListResultModel<ViewListModel> GetListData(DisplayDataListPostModel postModel)
         {
             ReactListResultModel<ViewListModel> model = new ReactListResultModel<ViewListModel>();
             List<ReactPopupModel> propertyList = new List<ReactPopupModel>();
@@ -71,7 +71,7 @@ namespace SuperBob
 
             var allData = db.Set<T>().ToList();
             model.TotalDataListSize = allData.Count;
-            var modelData = allData.Skip(skip).Take(number).ToList();
+            var modelData = allData.Skip(postModel.Skip).Take(postModel.Number).ToList();
 
             List<ViewListModel> listModel = new List<ViewListModel>();
             var ViewModelProps = typeof(ViewListModel).GetProperties();
@@ -98,11 +98,11 @@ namespace SuperBob
             return model;
         }
 
-        public virtual ActionResult DisplayList(int skip, int number)
+        public virtual ActionResult DisplayList(DisplayDataListPostModel postModel)
         {
             // using manually created service to replace method in this abstract class
             // var model = GetListData();
-            var model = _reactFrameWorkService.GetListData(skip,number);
+            var model = _reactFrameWorkService.GetListData(postModel.Skip, postModel.Number);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
