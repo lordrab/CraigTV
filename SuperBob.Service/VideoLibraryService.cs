@@ -6,26 +6,33 @@ using System.Threading.Tasks;
 using SuperBob.Model;
 using SuperBob.Service.Contract;
 using SuperBob.Repository;
+using SuperBob.Service.Models;
 
 namespace SuperBob.Service
 {
     public class VideoLibraryService : IVideoLibraryService
     {
         private IRepository<VideoLibrary> _videoLibraryRepository;
+        private IErrorLogService _errorLogService;
 
-        public VideoLibraryService(IRepository<VideoLibrary> videoLibraryRepository)
+        public VideoLibraryService(IRepository<VideoLibrary> videoLibraryRepository, IErrorLogService errorLogService)
         {
             _videoLibraryRepository = videoLibraryRepository;
+            _errorLogService = errorLogService;
         }
 
-        public bool AddVideoLibrary(VideoLibrary model)
+        public SharedServiceAjaxModel AddVideoLibrary(VideoLibrary model)
         {
+            SharedServiceAjaxModel rModel = new SharedServiceAjaxModel();
             try
             {
                 if ( model.Id == 0)
                 {
                     _videoLibraryRepository.Add(model);
-                    return true;
+                    rModel.Success = true;
+                    rModel.Update = false;
+                    rModel.Id = model.Id;
+                    return rModel;
                 }
                 else
                 {
@@ -36,18 +43,31 @@ namespace SuperBob.Service
                     data.Description = data.Description;
                     _videoLibraryRepository.Update(data);
 
-                    return true;
+                    rModel.Success = true;
+                    rModel.Update = true;
+                    rModel.Id = model.Id;
+                    return rModel;
                 }
             }
-            catch
+            catch(Exception error)
             {
-                return false;
+                _errorLogService.AddErrorLog(new Models.ErrorLogServiceModel
+                {
+                    Error = error,
+                    Location = "VideoLibraryService",
+                    Method = "AddVideoLibrary",
+                    OtherInfo = ""
+                });
+                rModel.Success = false;
+                rModel.Update = false;
+                rModel.Id = model.Id;
+                return rModel;
             }
             
         }
 
         public IEnumerable<VideoLibrary> GetVideoLibrary()
-        {             
+        {                     
             return _videoLibraryRepository.GetAll();
         }
 

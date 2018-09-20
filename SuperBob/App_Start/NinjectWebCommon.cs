@@ -72,7 +72,8 @@ namespace SuperBob.App_Start
 
                 kernel.Bind<IPlayListService>().To<PlayListService>();
                 kernel.Bind<IPlayListVideoService>().To<PlayListVideoService>();
-
+                kernel.Bind<IErrorLogService>().To<ErrorLogService>();
+                kernel.Bind<IRepository<ErrorLog>>().To<Repository<ErrorLog>>();
                 kernel.Bind<IReactFrameWorkService<PlayListVideo, VideoPLayerVideoListModel, VideoPLayerVideoEditModel>>().
                     To<ReactFrameWorkService<PlayListVideo, VideoPLayerVideoListModel, VideoPLayerVideoEditModel>>();
                 RegisterServices(kernel);

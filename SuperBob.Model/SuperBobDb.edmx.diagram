@@ -24,6 +24,7 @@
         <AssociationConnector Association="SuperBobModel.FK_VideoLibrary_Catagory" />
         <AssociationConnector Association="SuperBobModel.FK_VideoLibrary_Genre" />
         <AssociationConnector Association="SuperBobModel.FK_PLayListVideo_VideoLibrary" />
+        <EntityTypeShape EntityType="SuperBobModel.ErrorLog" Width="1.5" PointX="5.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

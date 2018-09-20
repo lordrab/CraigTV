@@ -35,5 +35,6 @@ namespace SuperBob.Model
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Catagory> Catagories { get; set; }
         public virtual DbSet<VideoLibrary> VideoLibraries { get; set; }
+        public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
     }
 }
