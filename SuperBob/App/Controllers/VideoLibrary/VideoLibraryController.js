@@ -116,7 +116,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
             keyboard: false,
             controller: function ($scope) {
                 $scope.disableCancel = false;
-                $scope.model = { Id: 0, FileName: '', VideoName: '', GenreType: 1, VideoDescription: '', CatagoryName: 2 }
+                $scope.model = { Id: 0, FileName: '', VideoName: '', GenreType: 1, VideoDescription: '', CatagoryName: 2 };
                 $scope.genreData = [];
                 $scope.catagoryData = [];
                 $scope.uploadFileName = 'Click Browse to select file....';
@@ -125,7 +125,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                 if (index !== 0) {
                     $scope.hideUpload = true;
                 } else {
-                    $scope.hideUpload = false
+                    $scope.hideUpload = false;
                 }
 
                 $http({
@@ -135,21 +135,19 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                     //console.log(response)
                     var genreData = response.data.GenreList;
                     for (i = 0; i < genreData.length; i++) {
-                        var rowModel = { Id: genreData[i].GenreId, GenreType: genreData[i].GenreType }
-                        $scope.genreData.push(rowModel)
+                        var rowModel = { Id: genreData[i].GenreId, GenreType: genreData[i].GenreType };
+                        $scope.genreData.push(rowModel);
                     }
                     $scope.model.GenreType = $scope.genreData[0].Id;
                     var catagoryData = response.data.CatagoryList;
                     for (i = 0; i < catagoryData.length; i++) {
-                        var rowModel = { Id: catagoryData[i].Id, Name: catagoryData[i].Name }
-                        $scope.catagoryData.push(rowModel)
-                    }
-                    console.log($scope.catagoryData)
+                        var catRowModel = { Id: catagoryData[i].Id, Name: catagoryData[i].Name };
+                        $scope.catagoryData.push(catRowModel);
+                    }                    
                     $scope.model.CatagoryName = $scope.catagoryData[0].Id;
+                });
 
-                })
-
-                if (rowIndex != 0) {
+                if (rowIndex !== 0) {
                     //console.log(index)
                     var data = { id: index };
                     $http({
@@ -179,7 +177,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
 
                 $scope.Upload = function () {
 
-                    if ($scope.hideUpload != true) {
+                    if ($scope.hideUpload !== true) {
                         $scope.disableCancel = true;
                         var files = document.getElementById('file').files;
                         var file = files[0];
@@ -187,7 +185,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                         $scope.fileSize = file.size;
 
                         var filetype = file.type;
-                        var filename = file.name
+                        var filename = file.name;
                         var block = 6000000;
                         var filePointer = 0;
                         var fileLock = false;
@@ -251,7 +249,6 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                                 }
                             } else {
                                 clearInterval(refreshIntervalId);
-
                                 $http({
                                     url: '/VideoLibrary/AddEditVideoLibrary',
                                     method: 'post',
@@ -276,7 +273,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                             method: 'post',
                             data: $scope.model
                         }).then(function (response) {
-
+                            console.log(response);
                             var genreText = '';
                             for (i = 0; i < $scope.genreData.length; i++) {
                                 if ($scope.genreData[i].Id === $scope.model.GenreType) {
@@ -297,7 +294,6 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                             modalId.close();
                         });
                     }
-
                 };
 
                 function getB64Str(buffer) {

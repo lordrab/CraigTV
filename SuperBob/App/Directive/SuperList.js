@@ -40,20 +40,20 @@
 </div>
 `,
         controller: function SuperListController($scope, $http, $uibModal) {
-            
+
             $scope.superListData = {
                 displayUrl: '/' + $scope.mvccontroller + '/DisplayList',
                 addEditUrl: '/' + $scope.mvccontroller + '/EditData',
                 saveDataUrl: '/' + $scope.mvccontroller + '/SaveCurrentData',
                 deleteDataUrl: '/' + $scope.mvccontroller + '/Delete',
                 addFunction: $scope.addFunction
-                
-            }
-            
+
+            };
+
             // if as different display list method has been passed use it
-            if (typeof($scope.listDataMethod) != 'undefined') {
+            if (typeof ($scope.listDataMethod) != 'undefined') {
                 $scope.superListData.displayUrl = '/' + $scope.mvccontroller + '/' + $scope.listDataMethod;
-            } 
+            }
             // same with a delete method
             if (typeof ($scope.deleteDataMethod) != 'undefined') {
                 $scope.superListData.deleteDataUrl = '/' + $scope.mvccontroller + '/' + $scope.deleteDataMethod;
@@ -72,16 +72,17 @@
             $scope.propertyNames = [];
             $scope.rowData = [];
             $scope.currentEditId = 0;
-            $scope.dataListStep = 12;
+            $scope.dataListStep = 14;
             $scope.pagationArray = [];
+            $scope.form = "";
 
             $scope.AddRecord = function (index, rowIndex) {
-                
-                if (typeof ($scope.addFunction ) != "undefined"  ) {
-                    
-                    $scope.superListData.addFunction(index, rowIndex, $scope.createListModel, $scope.getRowData);                   
-                   
-                } else {   
+
+                if (typeof ($scope.addFunction) != "undefined") {
+
+                    $scope.superListData.addFunction(index, rowIndex, $scope.createListModel, $scope.getRowData);
+
+                } else {
                     console.log($scope.superListData.addEditUrl)
                     $scope.currentEditId = rowIndex;
                     $http({
@@ -89,19 +90,16 @@
                         method: 'post',
                         data: { Id: index }
                     }).then(function (result) {
-
                         var modal = {
                             popupModal: result.data.PopupDisplayModel,
                             dataModel: result.data.Model
-                        }
+                        };
                         $scope.DataModal(modal, $scope);
-                    })                   
-                }              
+                    });
+                }
             };
 
             $scope.DeleteRecord = function (index, rowIndex) {
-
-
                 var DeleteFunction = function (url, index) {
                     $http({
                         method: 'post',
@@ -110,23 +108,20 @@
                     }).then(function (result) {
 
                         if (result.data.Success) {
-                            $scope.rowData.splice(rowIndex, 1)
+                            $scope.rowData.splice(rowIndex, 1);
                         }
-
                     });
-                }
+                };
 
                 yesNoPopupService.YesNoPopup(function () { DeleteFunction($scope.superListData.deleteDataUrl, index); });
 
             };
 
-            $scope.form = "";
-            
-            if (typeof ($scope.displayListData) == 'undefined') {
+            if (typeof ($scope.displayListData) === 'undefined') {
                 var model = {
                     skip: 0,
                     number: $scope.dataListStep
-                }
+                };
                 $http({
                     url: $scope.superListData.displayUrl,
                     method: 'post',
@@ -135,74 +130,67 @@
                     //console.log(response)
                     $scope.propertyNames = response.data.PropertyNames;
                     var bob = response.data.TotalDataListSize / $scope.dataListStep;
-                    
+
                     var totalPages = Math.round(bob) + 1;
                     for (i = 1; i <= totalPages; i++) {
                         $scope.pagationArray.push(i);
                     }
                     for (i = 0; i < response.data.DataList.length; i++) {
-                        $scope.createListModel(response.data.DataList[i])
+                        $scope.createListModel(response.data.DataList[i]);
                     }
                 });
             } else {
-               
+
                 $http({
                     url: $scope.superListData.displayUrl,
                     method: 'post',
                     data: $scope.displayListData
                 }).then(function (response) {
                     $scope.propertyNames = response.data.PropertyNames;
-                    console.log(response.data) 
+                    console.log(response.data)
                     var bob = response.data.TotalDataListSize / $scope.dataListStep;
                     console.log(bob)
                     for (i = 0; i < response.data.DataList.length; i++) {
-                        $scope.createListModel(response.data.DataList[i])
+                        $scope.createListModel(response.data.DataList[i]);
                     }
-                });                
-            }           
-           
-            $scope.createListModel = function (data,index) {
+                });
+            }
+
+            $scope.createListModel = function (data, index) {
                 var model = {};
-                
-                if (typeof (index) == 'undefined') {
+
+                if (typeof (index) === 'undefined') {
                     for (p = 0; p < $scope.propertyNames.length; p++) {
                         var value = data[$scope.propertyNames[p].PropertyName];
                         model[$scope.propertyNames[p].PropertyName] = {
                             value: value,
                             display: $scope.propertyNames[p].DisplayProperty
-                        }
+                        };
                     }
                     $scope.rowData.push(model);
                 } else {
-                    console.log(data)
-                    console.log($scope.rowData[index])
+                    
                     var totalProps = Object.keys(data);
                     for (i = 0; i < totalProps.length; i++) {
-                        
+
                         if (typeof ($scope.rowData[index][totalProps[i]]) != 'undefined') {
                             $scope.rowData[index][totalProps[i]].value = data[totalProps[i]];
                         }
-                        
-                        
                     }
-                    //console.log(index)
-                    //console.log()
-                    //console.log($scope.rowData[index])
                 }
-                              
             };
 
             $scope.getRowData = function (rowIndex) {
-                return $scope.rowData[rowIndex]
-            }
+                return $scope.rowData[rowIndex];
+            };
 
-            $scope.pageChanged = function (page) {               
+            $scope.pageChanged = function (page) {
                 var pageMulti = page - 1;
-                var pageStart = pageMulti * $scope.dataListStep;                
+                var pageStart = pageMulti * $scope.dataListStep;
                 var model = {
                     skip: pageStart,
                     number: $scope.dataListStep
-                }
+                };
 
                 $http({
                     url: $scope.superListData.displayUrl,
@@ -212,10 +200,10 @@
                     //console.log(response)
                     $scope.rowData = [];
                     for (i = 0; i < response.data.DataList.length; i++) {
-                        $scope.createListModel(response.data.DataList[i])
+                        $scope.createListModel(response.data.DataList[i]);
                     }
                 });
-            }
+            };
 
             $scope.DataModal = function (frameWorkModel, scope) {
 
@@ -247,20 +235,19 @@
                     ,
                     controller: function ($scope) {
 
-                        $("#file").css('opacity','0');
-                        
+                        $("#file").css('opacity', '0');
+
                         // build popup modal object                           
                         $scope.uiPopUpModel = {};
                         $scope.fileSize = 0;
                         $scope.uploaded = 0;
                         for (i = 0; i < frameWorkModel.popupModal.length; i++) {
-                            
+
                             if (frameWorkModel.popupModal[i].PropertyName.indexOf("List") != -1) {
                                 var linkListId = frameWorkModel.popupModal[i].PropertyName.replace("List", "Id");
                                 if (typeof (frameWorkModel.dataModel[linkListId]) != 'undefined') {
                                     var linkedListIdValue = frameWorkModel.dataModel[linkListId].toString();
                                 }
-                                
                             }
 
                             $scope.uiPopUpModel[frameWorkModel.popupModal[i].PropertyName] = {
@@ -276,11 +263,11 @@
                             modalId.close();
                         };
 
-                        this.handlechange = function(e) {
+                        this.handlechange = function (e) {
                             console.log(e)
                         }
 
-                        
+
                         $scope.Upload = function () {
 
                             var files = document.getElementById('file').files;
@@ -295,23 +282,23 @@
                             var fileLock = false;
                             var writeSuccess = false;
                             var endOfFile = false;
-                            
+
                             console.log(file)
 
                             $scope.uploaded = 0;
-                           
-                            var refreshIntervalId = setInterval(function () {                              
+
+                            var refreshIntervalId = setInterval(function () {
 
                                 if ($scope.fileSize < block) {
                                     block = $scope.fileSize;
                                 }
 
                                 if ($scope.uploaded < $scope.fileSize) {
-                                    
+
                                     if (fileLock == false) {
                                         fileLock = true;
                                         var leftToDownload = $scope.fileSize - $scope.uploaded;
-                                        
+
                                         if (leftToDownload < block) {
                                             block = leftToDownload;
                                             endOfFile = true;
@@ -322,16 +309,17 @@
                                         fileData.onloadend = function (evt) {
                                             if (evt.target.readyState == FileReader.DONE) {
                                                 var data = { fileName: filename, fileData: getB64Str(evt.target.result), contentType: "ss", endOfFile: endOfFile }
-                                                
+
                                                 $.ajax({
                                                     url: '/VideoLibrary/Upload',
                                                     type: 'post',
                                                     data: data,
-                                                    success: function (data) {                                                        
+                                                    success: function (data) {
                                                         writeSuccess = data.writeSuccess;
-                                                        if (writeSuccess) {                                                            
+                                                        if (writeSuccess) {
                                                             $scope.uploaded = filePointer + block;
-                                                            filePointer = filePointer + block;                                                        }
+                                                            filePointer = filePointer + block;
+                                                        }
                                                         var percent = $scope.uploaded / $scope.fileSize * 100
                                                         console.log(percent)
                                                         $("#uploadbar").css("width", percent + "%")
@@ -351,7 +339,7 @@
                                             }
                                         }
 
-                                        fileData.readAsArrayBuffer(blob);    
+                                        fileData.readAsArrayBuffer(blob);
                                     }
                                 } else {
                                     clearInterval(refreshIntervalId);
@@ -384,7 +372,7 @@
 
                                 switch (typeof ($scope.uiPopUpModel[totalKeys[i]].Value)) {
                                     case "object":
-                                        databaseId = totalKeys[i].replace("List", "Id")
+                                        databaseId = totalKeys[i].replace("List", "Id");
                                         returnModel[databaseId] = $scope.uiPopUpModel[totalKeys[i]].listId.Value;
                                         break;
                                     default:
@@ -397,14 +385,14 @@
                                 url: scope.superListData.saveDataUrl,
                                 data: returnModel
                             }).then(function (result) {
-                                console.log(result)
+                                //console.log(result)
                                 if (result.data.Success) {
                                     if (result.data.AddRecord) {
                                         var newObj = {};
                                         for (i = 0; i < result.data.AddDisplayListData.length; i++) {
                                             newObj[result.data.AddDisplayListData[i].PropertyName] = result.data.AddDisplayListData[i].PropertyValue;
                                         }
-                                        scope.createListModel(newObj)
+                                        scope.createListModel(newObj);
                                     } else {
                                         var id = scope.currentEditId;
                                         console.log(id)
@@ -413,19 +401,13 @@
                                             scope.rowData[id][result.data.AddDisplayListData[i].PropertyName].value = result.data.AddDisplayListData[i].PropertyValue;
                                         }
                                     }
-
-
-                                };
-
-
+                                }
                                 modalId.close();
                             });
-
                         };
                     }
                 });
-
             };
-        }          
-    }
+        }
+    };
 });
