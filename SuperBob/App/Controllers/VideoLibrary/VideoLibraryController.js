@@ -195,7 +195,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                         $scope.model.VideoName = test[0].name.slice(0, -4);
                     }
                     $scope.$apply();
-                }
+                };
 
                 $scope.Upload = function () {
 

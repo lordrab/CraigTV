@@ -241,3 +241,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /SuperBob/Videos/TestVid.mp4
+/SuperBob/Videos/bob.mp4

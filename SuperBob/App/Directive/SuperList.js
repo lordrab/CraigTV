@@ -139,9 +139,15 @@
                 }).then(function (response) {
                     //console.log(response)
                     $scope.propertyNames = response.data.PropertyNames;
-                    var bob = response.data.TotalDataListSize / $scope.dataListStep;
-
-                    var totalPages = Math.round(bob) + 1;
+                    var totalPages = response.data.TotalDataListSize / $scope.dataListStep;
+                    
+                    var totalPagesRounded = Math.round(totalPages);
+                    var nextPageIndex = totalPagesRounded * $scope.dataListStep;
+                    
+                    if (response.data.TotalDataListSize > nextPageIndex) {
+                        totalPages++;
+                    }
+                                       
                     for (i = 1; i <= totalPages; i++) {
                         $scope.pagationArray.push(i);
                     }

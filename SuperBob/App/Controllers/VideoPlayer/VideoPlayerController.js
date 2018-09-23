@@ -53,28 +53,28 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
         $scope.player;
         $scope.currentVideoPlaying = index;
         $scope.player = videojs("videoPlayer", { controls: true, autoplay: true, height: y }, function () {
-            $scope.player.src("/Videos/" + $scope.videoData[index].FileName)
+            $scope.player.src("/Videos/" + $scope.videoData[index].FileName);
             $scope.player.on('ended', function () {
-                
                 var cId = $scope.currentVideoPlaying;
                 cId++;
-                if (cId < $scope.videoData.length) {                  
-                    $scope.player.src("/Videos/" + $scope.videoData[cId].FileName)
+                
+                if (cId < $scope.videoData.length) {
+                    $scope.player.src("/Videos/" + $scope.videoData[cId].FileName);
                     $scope.currentVideoPlaying = cId;
                 } else {
                     $scope.showVideoList = true;
                     $scope.showPlayer = false;
-                    console.log("ss")
-                }               
-            })
+                    console.log($scope.showVideoList);
+                }
+            });
         });
-    }
+    };
 
     $scope.showList = function () {
         $scope.showVideoList = true;
         $scope.showPlayer = false;
         $scope.player.pause();
-    }
+    };
 
     $scope.addPlayList = function () {
         inputModelService.InputData($scope.savePlayList, "Enter Playlist Name");
@@ -135,14 +135,14 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
         console.log($scope.deleteId)
         var model = {
             Id: $scope.videoData[$scope.deleteId].Id
-        }
+        };
 
         $http({
             url: '/VideoPlayer/DeleteFromPlayList',
             method: 'post',
             data: model
         }).then(function (response) {
-            console.log(response)
+            //console.log(response)
             if (response.data.Success) {
                 $scope.videoData.splice($scope.deleteId, 1);
             }
