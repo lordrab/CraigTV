@@ -26,7 +26,8 @@ namespace SuperBob.Service
                 Location = model.Location,
                 Error = model.Error.Message.ToString(),
                 Method = model.Method,
-                OtherInfo = model.OtherInfo
+                OtherInfo = model.OtherInfo,
+                 ErrorDate = DateTime.Now
             };
             _errorLogRepository.Add(addModel);
             

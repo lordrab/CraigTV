@@ -5,25 +5,13 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
     $scope.selectId = 0;
 
     $scope.filterModel = {
+        filterStartId: 2,
         filterList: [],
-        selectId: 0,
-        filterChange: function (filterIndex) {
-            console.log(filterIndex)
-        }
-    }
-
-    $http({
-        url: '/VideoLibrary/GetGenreList',
-        method: 'get'
-    }).then(function (response) {
-        console.log(response)
-        $scope.filterModel.filterList.push({ Id: 0, Name: 'All' });
-        for (i = 0; i < response.data.CatagoryList.length; i++) {
-            $scope.filterModel.filterList.push(response.data.CatagoryList[i])
-        }
-        });
-
-
+        filterPropertyName: 'CatagoryId',
+        listUrl: '/VideoLibrary/GetGenreList',
+        getModelPropertyName: 'CatagoryList'
+    };
+   
     $scope.CustomAdd = function (index, rowIndex, superListAddToModel) {
 
         var modalId = $uibModal.open({
@@ -198,10 +186,21 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                 };
 
                 $scope.Upload = function () {
-
+                  
                     if ($scope.hideUpload !== true) {
                         $scope.disableCancel = true;
+                        $scope.uploadDataOk = true;
+
                         var files = document.getElementById('file').files;
+                        if ($scope.model.GenreType === 0) {
+                            $scope.uploadDataOk = false;
+                        }
+                        if ($scope.model.CatagoryName === 0) {
+                            $scope.uploadDataOk = false;
+                        }
+
+                        if (files.length > 0 && $scope.uploadDataOk) {
+                        
                         var file = files[0];
 
                         $scope.fileSize = file.size;
@@ -215,79 +214,81 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
                         var endOfFile = false;
 
                         $scope.uploaded = 0;
+                        
+                            var refreshIntervalId = setInterval(function () {
 
-                        var refreshIntervalId = setInterval(function () {
-
-                            if ($scope.fileSize < block) {
-                                block = $scope.fileSize;
-                            }
-                            //console.log($scope.fileSize)
-                            //console.log($scope.uploaded)
-                            if ($scope.uploaded < $scope.fileSize) {
-
-                                if (fileLock === false) {
-                                    fileLock = true;
-                                    var leftToDownload = $scope.fileSize - $scope.uploaded;
-
-                                    if (leftToDownload < block) {
-                                        block = leftToDownload;
-                                        endOfFile = true;
-                                    }
-                                    var blob = file.slice(filePointer, filePointer + block);
-                                    var fileData = new FileReader();
-
-                                    fileData.onloadend = function (evt) {
-                                        if (evt.target.readyState == FileReader.DONE) {
-                                            var data = { fileName: filename, fileData: getB64Str(evt.target.result), contentType: "ss", endOfFile: endOfFile }
-
-                                            $.ajax({
-                                                url: '/VideoLibrary/Upload',
-                                                type: 'post',
-                                                data: data,
-                                                success: function (data) {
-                                                    writeSuccess = data.writeSuccess;
-                                                    if (writeSuccess) {
-                                                        $scope.uploaded = filePointer + block;
-                                                        filePointer = filePointer + block;
-                                                    }
-                                                    var percent = $scope.uploaded / $scope.fileSize * 100
-
-                                                    $("#uploadbar").css("width", percent + "%")
-                                                    $("#progressbar-label").text(Math.round(percent) + "%")
-                                                    $("#bob").text(filePointer)
-                                                    if (endOfFile != true) {
-                                                        fileLock = false;
-                                                    } else {
-                                                        //clearInterval(refreshIntervalId);  not needed !!                                            
-                                                    }
-                                                },
-                                                error: function (response) {
-                                                    console.log(response)
-                                                }
-                                            })
-                                        }
-                                    }
-                                    fileData.readAsArrayBuffer(blob);
+                                if ($scope.fileSize < block) {
+                                    block = $scope.fileSize;
                                 }
-                            } else {
-                                clearInterval(refreshIntervalId);
-                                $http({
-                                    url: '/VideoLibrary/AddEditVideoLibrary',
-                                    method: 'post',
-                                    data: $scope.model
-                                }).then(function (response) {
-                                    console.log(response);
-                                    if (response.data.success) {
-                                        var saveModel = {
-                                            Id: response.data.displayListModel.Id, GenreType: response.data.displayListModel.GenreType,
-                                            GenreId: response.data.displayListModel.GenreType, Name: response.data.displayListModel.Name
+                                //console.log($scope.fileSize)
+                                //console.log($scope.uploaded)
+                                if ($scope.uploaded < $scope.fileSize) {
+
+                                    if (fileLock === false) {
+                                        fileLock = true;
+                                        var leftToDownload = $scope.fileSize - $scope.uploaded;
+
+                                        if (leftToDownload < block) {
+                                            block = leftToDownload;
+                                            endOfFile = true;
+                                        }
+                                        var blob = file.slice(filePointer, filePointer + block);
+                                        var fileData = new FileReader();
+
+                                        fileData.onloadend = function (evt) {
+                                            if (evt.target.readyState == FileReader.DONE) {
+                                                var data = { fileName: filename, fileData: getB64Str(evt.target.result), contentType: "ss", endOfFile: endOfFile };
+
+                                                $.ajax({
+                                                    url: '/VideoLibrary/Upload',
+                                                    type: 'post',
+                                                    data: data,
+                                                    success: function (data) {
+                                                        writeSuccess = data.writeSuccess;
+                                                        if (writeSuccess) {
+                                                            $scope.uploaded = filePointer + block;
+                                                            filePointer = filePointer + block;
+                                                        }
+                                                        var percent = $scope.uploaded / $scope.fileSize * 100;
+
+                                                        $("#uploadbar").css("width", percent + "%");
+                                                        $("#progressbar-label").text(Math.round(percent) + "%");
+                                                        $("#bob").text(filePointer);
+                                                        if (endOfFile != true) {
+                                                            fileLock = false;
+                                                        } else {
+                                                            //clearInterval(refreshIntervalId);  not needed !!                                            
+                                                        }
+                                                    },
+                                                    error: function (response) {
+                                                        console.log(response)
+                                                    }
+                                                });
+                                            }
                                         };
-                                        superListAddToModel(saveModel);
-                                        modalId.close();
-                                    }                                  
-                                });
-                            }
-                        }, 1000);
+                                        fileData.readAsArrayBuffer(blob);
+                                    }
+                                } else {
+                                    clearInterval(refreshIntervalId);
+                                    $http({
+                                        url: '/VideoLibrary/AddEditVideoLibrary',
+                                        method: 'post',
+                                        data: $scope.model
+                                    }).then(function (response) {
+                                        console.log(response);
+                                        if (response.data.success) {
+                                            var saveModel = {
+                                                Id: response.data.displayListModel.Id, GenreType: response.data.displayListModel.GenreType,
+                                                GenreId: response.data.displayListModel.GenreType, Name: response.data.displayListModel.Name
+                                            };
+                                            superListAddToModel(saveModel);
+                                            modalId.close();
+                                        }
+                                    });
+                                }
+                            }, 1000);
+                        }
+                        
                     } else {
                         console.log($scope.model);
                         $http({
@@ -306,7 +307,7 @@ app.controller("videoLibraryCtrl", function ($scope, $http, $uibModal) {
 
                             var catText = '';
                             for (i = 0; i < $scope.catagoryData.length; i++) {
-                                if ($scope.catagoryData[i].Id === $scope.model.Catagory) {
+                                if ($scope.catagoryData[i].Id === $scope.model.CatagoryName) {
                                     catText = $scope.catagoryData[i].Name;
                                 }
                             }

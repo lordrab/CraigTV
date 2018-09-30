@@ -167,7 +167,7 @@ namespace SuperBob.Service
             }
         }
 
-        public ReactListResultModel<ViewListModel> GetListData(int skip, int number)
+        public ReactListResultModel<ViewListModel> GetListData(DisplayDataListPostModel inputModel)
         {
             ReactListResultModel<ViewListModel> model = new ReactListResultModel<ViewListModel>();
             List<ReactPopupModel> propertyList = new List<ReactPopupModel>();
@@ -214,34 +214,47 @@ namespace SuperBob.Service
             model.PropertyNames = propertyList;
 
             var allData = db.Set<Table>().ToList();
-            model.TotalDataListSize = allData.Count;
-            var modelData = allData.Skip(skip).Take(number).ToList();
-
-
+            //model.TotalDataListSize = allData.Count;
+            
+           // var modelData = allData.Skip(inputModel.Skip).Take(inputModel.Number).ToList();
             List<ViewListModel> listModel = new List<ViewListModel>();
             var ViewModelProps = typeof(ViewListModel).GetProperties();
 
 
-            foreach (var currentRow in modelData)
+            foreach (var currentRow in allData)
             {
                 var currentRowProps = currentRow.GetType().GetProperties();
                 var addModel = new ViewListModel();
-
-
-
+                var addRecord = true;
                 foreach (var modelProperty in currentRowProps)
                 {
-                    foreach (var otherProperty in ViewModelProps)
+                    if ( modelProperty.Name == inputModel.FilterProperty)
                     {
-                        if (modelProperty.Name == otherProperty.Name)
+                        var matchValue = modelProperty.GetValue(currentRow).ToString();
+                        if ( inputModel.FilterId.ToString() != matchValue && inputModel.FilterId != 0)
                         {
-                            otherProperty.SetValue(addModel, modelProperty.GetValue(currentRow));
+                            addRecord = false;
                         }
                     }
+                    if (addRecord)
+                    {
+                        foreach (var otherProperty in ViewModelProps)
+                        {
+                            if (modelProperty.Name == otherProperty.Name)
+                            {
+                                otherProperty.SetValue(addModel, modelProperty.GetValue(currentRow));
+                            }
+                        }
+                    }
+                    
                 }
-                listModel.Add(addModel);
+                if (addRecord)
+                {
+                    listModel.Add(addModel);
+                }
             }
-            model.DataList = listModel;
+            model.TotalDataListSize = listModel.Count;
+            model.DataList = listModel.Skip(inputModel.Skip).Take(inputModel.Number).ToList();
 
             return model;
 

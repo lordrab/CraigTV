@@ -76,6 +76,10 @@ namespace SuperBob.App_Start
                 kernel.Bind<IRepository<ErrorLog>>().To<Repository<ErrorLog>>();
                 kernel.Bind<IReactFrameWorkService<PlayListVideo, VideoPLayerVideoListModel, VideoPLayerVideoEditModel>>().
                     To<ReactFrameWorkService<PlayListVideo, VideoPLayerVideoListModel, VideoPLayerVideoEditModel>>();
+
+                kernel.Bind<IReactFrameWorkService<VideoLibrary, VideoLibraryListViewModel, VideoLibraryEditViewModel>>().
+                    To<ReactFrameWorkService<VideoLibrary, VideoLibraryListViewModel, VideoLibraryEditViewModel>>();
+
                 RegisterServices(kernel);
                 return kernel;
             }

@@ -5,5 +5,11 @@ app.controller("CatagoryCtrl", function($scope,$http) {
         url: 'test',
         bob: 'asdasd'
     };
+    $scope.filterModel = {
+        filterList: [],
+        selectId: 0,
+        filterChange: function (filterIndex) {
 
+        }
+    };
 })

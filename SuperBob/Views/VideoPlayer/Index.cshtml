@@ -23,7 +23,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-4">
-                            <select ng-model="playListId" class="col-sm-12" ng-options="x.Id as x.PlayListName for x in videoPLayList" selected="playListId"
+                            <select ng-model="playListId" class="col-sm-12" ng-options="x.Id as x.Name for x in videoPLayList" selected="playListId"
                                     ng-click="playListChanged()"></select>
                         </div>
                         <div class="col-sm-4">
@@ -34,7 +34,7 @@
                         </div>
 
                     </div>
-                    <div class="row">
+                    <div class="row" ng-show="showPlayList">
                         <table class="table table-bordered">
                             <tr>
                                 <th>Title</th>
@@ -44,14 +44,15 @@
                             <tr ng-repeat="row in videoData">
                                 <td ng-click="playVideo($index)">{{row.Title}}</td>
                                 <td>{{row.Gerne}}</td>
-                                <td><button class="btn sharedbutton" ng-click="playVideo($index)">Play</button>
-                                <button class="btn sharedbutton-delete" ng-click="deleteVideo($index)">Delete</button>
+                                <td>
+                                    <button class="btn sharedbutton" ng-click="playVideo($index)">Play</button>
+                                    <button class="btn sharedbutton-delete" ng-click="deleteVideo($index)">Delete</button>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
-               
+                <super-list hide-List="hideList" mvccontroller="VideoPlayer" filter-Model="filterModel" custom-Button-Model="buttonModel"></super-list>
             </div>
         </div>
     </div>

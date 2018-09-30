@@ -22,13 +22,16 @@ namespace SuperBob.Controllers
         private IVideoLibraryService _videoLibraryService;
         private IGenreService _genreService;
         private ICatagoryService _catagoryService;
+        private IReactFrameWorkService<VideoLibrary, VideoLibraryListViewModel, VideoLibraryEditViewModel> _reactFrameWorkService;
 
         public VideoLibraryController(IVideoLibraryService videoLibraryService,
-            IGenreService genreService, ICatagoryService catagoryService)
+            IGenreService genreService, ICatagoryService catagoryService,
+            IReactFrameWorkService<VideoLibrary, VideoLibraryListViewModel, VideoLibraryEditViewModel> reactFrameWorkService)
         {
             _videoLibraryService = videoLibraryService;
             _genreService = genreService;
             _catagoryService = catagoryService;
+            _reactFrameWorkService = reactFrameWorkService;
         }
 
 
@@ -50,14 +53,21 @@ namespace SuperBob.Controllers
 
         public override ActionResult DisplayList(DisplayDataListPostModel postModel)
         {
-            var model = GetListData(postModel);
+            //var model = GetListData(postModel);
+            var model = _reactFrameWorkService.GetListData(postModel);
             foreach (var m in model.DataList)
             {
                 m.GenreType = _genreService.GetById(m.GenreId).Name.Trim();
             }
             foreach(var m in model.DataList)
             {
-                m.CatagoryName = _catagoryService.GetById(m.CatagoryId).Name;
+                var catData = _catagoryService.GetById(m.CatagoryId);
+                 
+                if ( catData != null)
+                {
+                    m.CatagoryName = catData.Name;
+                }
+                
             }
             return Json(model, JsonRequestBehavior.AllowGet);
         }

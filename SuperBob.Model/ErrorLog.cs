@@ -19,5 +19,6 @@ namespace SuperBob.Model
         public string Method { get; set; }
         public string Error { get; set; }
         public string OtherInfo { get; set; }
+        public System.DateTime ErrorDate { get; set; }
     }
 }

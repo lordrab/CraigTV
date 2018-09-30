@@ -2,26 +2,28 @@
     return {
         scope: {
             mvccontroller: '@',
+            hideList: '=',
             listDataMethod: '@',
             editDataMethod: '@',
             saveDataMethod: '@',
             deleteDataMethod: '@',
             addFunction: '=',
             displayListData: '=',
-            filterModel: '='
-            
+            filterModel: '=',
+            customButtonModel: '<',
+            filterPropertyName: '='
         },
-        template: `<div class="container"><div class="row">
+        template: `<div class="container"><div class="row" ng-show="hideList">
                 <div class="col-sm-6">
                 <button class="btn sharedbutton" ng-click="AddRecord(0)">Add</button>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6" ng-hide="hideFilterList">
                 <select ng-model="selectedFilter" ng-options="x.Id as x.Name for x in filterList" selected="selectedFilter"" class="col-sm-5"
-                ng-click="changeFilter(selectedFilter)">
+                ng-change="getDisplayList(selectedFilter)">
                 </select>
                 </div>
                 </div>
-                <div class="row">
+                <div class="row" ng-show="hideList" >
                 <table class="table table-bordered shared-table"><tr >
                 <th ng-repeat="property in propertyNames" ng-show="property.DisplayProperty">{{property.DisplayName}}</th>
                 <th>Action</th>
@@ -30,14 +32,23 @@
                 <td ng-repeat="(key,value) in row" ng-if="row[key].display">                  
                 <span >{{row[key].value}}</span>
                 </td>                
-                <td><button class="btn sharedbutton-edit" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
+                <td>
+                <div ng-show="showDefaultButtons" >
+                <button class="btn sharedbutton-edit" ng-click="AddRecord(row.Id.value,$index)">Edit</button>
                 <button class="btn sharedbutton-delete" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
-                <div class="test"></div>
+                </div>
+                <div ng-show="showCustomButtons" >
+                <div data-ng-repeat="b in row.buttonData.buttonData">
+                    <div class="col-sm-3">
+                    <button ng-class="b.class" ng-click="customButton($parent.$index,$index)" ng-show="b.show">{{b.title}}</button>
+                    </div>
+                </div>
+                </div>
                 </td>                
                 </tr>               
                 </table>
                 </div>
-        <div class="row">
+        <div class="row" ng-show="pagationArray.length > 1 && hideList == true" >
             <nav aria-label="Page navigation example">
             <ul class="pagination" ng-repeat="x in pagationArray">
             <li class="page-item"><a class="page-link" href="#" ng-click="pageChanged(x)">{{x}}</a></li>
@@ -46,8 +57,8 @@
                 </div>
 </div>
 `,
-        controller: function SuperListController($scope, $http, $uibModal) {
-
+        controller: function SuperListController($scope, $http, $uibModal, $compile) {
+            
             $scope.superListData = {
                 displayUrl: '/' + $scope.mvccontroller + '/DisplayList',
                 addEditUrl: '/' + $scope.mvccontroller + '/EditData',
@@ -56,7 +67,7 @@
                 addFunction: $scope.addFunction
 
             };
-            
+
             // if as different display list method has been passed use it
             if (typeof ($scope.listDataMethod) != 'undefined') {
                 $scope.superListData.displayUrl = '/' + $scope.mvccontroller + '/' + $scope.listDataMethod;
@@ -75,7 +86,16 @@
             if (typeof ($scope.editDataMethod) != 'undefined') {
                 $scope.superListData.addEditUrl = '/' + $scope.mvccontroller + '/' + $scope.editDataMethod;
             }
-            console.log($scope.filterModel)
+
+            $scope.showDefaultButtons = true;
+            $scope.showCustomButtons = false;
+
+            if (typeof ($scope.customButtonModel) != 'undefined') {
+                $scope.buttonModel = $scope.customButtonModel;
+                $scope.showDefaultButtons = false;
+                $scope.showCustomButtons = true;
+            }
+
             $scope.propertyNames = [];
             $scope.rowData = [];
             $scope.currentEditId = 0;
@@ -83,9 +103,131 @@
             $scope.pagationArray = [];
             $scope.form = "";
             $scope.filterList = [];
-            $scope.selectedFilter = $scope.filterModel.selectId;
-            $scope.filterList = $scope.filterModel.filterList;   
-            $scope.changeFilter = $scope.filterModel.filterChange;
+            $scope.hideFilterList = false;  
+
+            $scope.bob = $scope.customButtonModel;
+
+            if (typeof($scope.filterModel) != 'undefined') {
+                $scope.filterProperty = $scope.filterModel.filterPropertyName;
+                $http({
+                    url: $scope.filterModel.listUrl,
+                    method: 'get'
+                }).then(function (response) {
+                    //console.log(response)                    
+                    if (typeof ($scope.filterModel.CustomFilterList) != 'undefined') {
+                        var CustomListData = $scope.filterModel.CustomFilterList;
+                        for (i = 0; i < CustomListData.length; i++) {
+                            $scope.filterList.push(CustomListData[i]);
+                        }
+                    }
+
+                    if (typeof ($scope.filterModel.getModelPropertyName) != 'undefined') {
+                        for (i = 0; i < response.data[$scope.filterModel.getModelPropertyName].length; i++) {
+                            $scope.filterList.push(response.data[$scope.filterModel.getModelPropertyName][i]);
+                        }
+                    } else {
+                        for (i = 0; i < response.data.length; i++) {
+                            $scope.filterList.push(response.data[i]);
+                        }
+                    }                   
+                    $scope.selectedFilter = $scope.filterList[0].Id;
+                    //$scope.hideFilterList = false;                    
+                });
+            }
+
+            $scope.customButton = function (rowIndex, buttonIndex) {
+                var returnData = $scope.rowData[rowIndex].buttonData.buttonClickFunction(rowIndex, buttonIndex, $scope.rowData);
+                console.log(rowIndex)
+                console.log($scope.rowData[rowIndex]);
+                console.log($scope.rowData.length)
+                switch (returnData.action) {
+                    case 'toggle':
+                        //console.log($scope.rowData[rowIndex].buttonData.buttonData[returnData.button1])
+                        //console.log(buttonIndex)
+                        $scope.rowData[rowIndex].buttonData.buttonData[returnData.button1].title = "ddd";
+                        break;
+                }
+                //console.log($scope.rowData)
+            };
+
+            $scope.setPagationArray = function (dataSize) {
+                $scope.pagationArray = [];
+                var totalPages = dataSize / $scope.dataListStep;
+
+                var totalPagesRounded = Math.round(totalPages);
+                var nextPageIndex = totalPagesRounded * $scope.dataListStep;
+                
+                totalPages = totalPagesRounded;
+                if (dataSize > nextPageIndex) {
+                    totalPages++;
+                }
+
+                for (i = 1; i <= totalPages; i++) {
+                    $scope.pagationArray.push(i);
+                }
+            };
+
+            $scope.getDisplayList = function (index) {
+                console.log(index)
+                // get selected filter info
+                for (i = 0; i < $scope.filterList.length; i++) {
+                    if (typeof (index) != 'undefined') {
+                        if ($scope.filterList[i].Id === index) {
+                            if ($scope.filterList[i].Custom === true) {
+                                if (typeof ($scope.filterList[i].executeFunction) != 'undefined') {
+                                    $scope.filterList[i].executeFunction($scope.filterList[i]);
+                                }
+                            } else {
+                                $scope.hideDataList = true;
+                            }
+                        }
+                    }                    
+                }
+
+                if (typeof ($scope.displayListData) === 'undefined') {
+                    var model = {
+                        Skip: 0,
+                        Number: $scope.dataListStep,
+                        filterId: $scope.selectedFilter,
+                        filterProperty: $scope.filterProperty
+                    };
+                    $http({
+                        url: $scope.superListData.displayUrl,
+                        method: 'post',
+                        data: model
+                    }).then(function (response) {
+                        //console.log(response)
+                        $scope.propertyNames = response.data.PropertyNames;
+                        $scope.pagationArray = [];
+                        $scope.setPagationArray(response.data.TotalDataListSize);
+                        $scope.rowData = [];
+                        for (i = 0; i < response.data.DataList.length; i++) {
+                            $scope.createListModel(response.data.DataList[i]);
+                        }
+                    });
+                } else {
+                    $http({
+                        url: $scope.superListData.displayUrl,
+                        method: 'post',
+                        data: $scope.displayListData
+                    }).then(function (response) {
+                        $scope.propertyNames = response.data.PropertyNames;
+                        //console.log(response.data)
+                        var bob = response.data.TotalDataListSize / $scope.dataListStep;
+                        //console.log(bob)
+                        for (i = 0; i < response.data.DataList.length; i++) {
+                            $scope.createListModel(response.data.DataList[i]);
+                        }
+                    });
+                }
+            };
+
+            if (typeof ($scope.filterModel.filterStartId) != 'undefined') {
+                //console.log($scope.filterModel.filterStartId)
+                $scope.getDisplayList($scope.filterModel.filterStartId);    // display list for the firsttime
+            } else {
+                $scope.getDisplayList();    // display list for the firsttime
+            }            
 
             $scope.AddRecord = function (index, rowIndex) {
 
@@ -93,7 +235,7 @@
 
                     $scope.superListData.addFunction(index, rowIndex, $scope.createListModel, $scope.getRowData);
 
-                } else {                   
+                } else {
                     $scope.currentEditId = rowIndex;
                     $http({
                         url: $scope.superListData.addEditUrl,
@@ -126,55 +268,11 @@
 
             };
 
-            if (typeof ($scope.displayListData) === 'undefined') {
-                var model = {
-                    Skip: 0,
-                    Number: $scope.dataListStep,
-                    filter: $scope.selectedFilter
-                };
-                $http({
-                    url: $scope.superListData.displayUrl,
-                    method: 'post',
-                    data: model
-                }).then(function (response) {
-                    //console.log(response)
-                    $scope.propertyNames = response.data.PropertyNames;
-                    var totalPages = response.data.TotalDataListSize / $scope.dataListStep;
-                    
-                    var totalPagesRounded = Math.round(totalPages);
-                    var nextPageIndex = totalPagesRounded * $scope.dataListStep;
-                    
-                    if (response.data.TotalDataListSize > nextPageIndex) {
-                        totalPages++;
-                    }
-                                       
-                    for (i = 1; i <= totalPages; i++) {
-                        $scope.pagationArray.push(i);
-                    }
-                    for (i = 0; i < response.data.DataList.length; i++) {
-                        $scope.createListModel(response.data.DataList[i]);
-                    }
-                });
-            } else {
-
-                $http({
-                    url: $scope.superListData.displayUrl,
-                    method: 'post',
-                    data: $scope.displayListData
-                }).then(function (response) {
-                    $scope.propertyNames = response.data.PropertyNames;
-                    //console.log(response.data)
-                    var bob = response.data.TotalDataListSize / $scope.dataListStep;
-                    //console.log(bob)
-                    for (i = 0; i < response.data.DataList.length; i++) {
-                        $scope.createListModel(response.data.DataList[i]);
-                    }
-                });
-            }
-
             $scope.createListModel = function (data, index) {
                 var model = {};
 
+                var jim = Object.create($scope.customButtonModel);
+                
                 if (typeof (index) === 'undefined') {
                     for (p = 0; p < $scope.propertyNames.length; p++) {
                         var value = data[$scope.propertyNames[p].PropertyName];
@@ -182,18 +280,25 @@
                             value: value,
                             display: $scope.propertyNames[p].DisplayProperty
                         };
+                        if (typeof($scope.customButtonModel) != 'undefined') {
+                            model.buttonData = jim;
+                        }
                     }
+                    
                     $scope.rowData.push(model);
                 } else {
-                    
+
                     var totalProps = Object.keys(data);
                     for (i = 0; i < totalProps.length; i++) {
 
                         if (typeof ($scope.rowData[index][totalProps[i]]) != 'undefined') {
                             $scope.rowData[index][totalProps[i]].value = data[totalProps[i]];
                         }
+                        if (typeof ($scope.customButtonModel) != 'undefined') {
+                            $scope.rowData[index].buttonData = $scope.customButtonModel;
+                        }
                     }
-                }
+                }                
             };
 
             $scope.getRowData = function (rowIndex) {
@@ -205,7 +310,9 @@
                 var pageStart = pageMulti * $scope.dataListStep;
                 var model = {
                     skip: pageStart,
-                    number: $scope.dataListStep
+                    number: $scope.dataListStep,
+                    filterId: $scope.selectedFilter,
+                    filterProperty: 'CatagoryId'
                 };
 
                 $http({

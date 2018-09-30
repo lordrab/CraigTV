@@ -23,86 +23,86 @@ namespace SuperBob
 
         private ReactFrameWorkService<T,ViewListModel,EditViewModel> _reactFrameWorkService = new ReactFrameWorkService<T,ViewListModel,EditViewModel>();        
 
-        public virtual ReactListResultModel<ViewListModel> GetListData(DisplayDataListPostModel postModel)
-        {
-            ReactListResultModel<ViewListModel> model = new ReactListResultModel<ViewListModel>();
-            List<ReactPopupModel> propertyList = new List<ReactPopupModel>();
+        //public virtual ReactListResultModel<ViewListModel> GetListData(DisplayDataListPostModel postModel)
+        //{
+        //    ReactListResultModel<ViewListModel> model = new ReactListResultModel<ViewListModel>();
+        //    List<ReactPopupModel> propertyList = new List<ReactPopupModel>();
 
-            var classData = typeof(ViewListModel).GetProperties();
-            foreach (var currentProperty in classData)
-            {
-                ReactPopupModel newProp = new ReactPopupModel();
-                string displayName;
+        //    var classData = typeof(ViewListModel).GetProperties();
+        //    foreach (var currentProperty in classData)
+        //    {
+        //        ReactPopupModel newProp = new ReactPopupModel();
+        //        string displayName;
 
-                if (currentProperty.GetCustomAttribute<DisplayAttribute>() != null)
-                {
-                    displayName = currentProperty.GetCustomAttribute<DisplayAttribute>().Name;
-                }
-                else
-                {
-                    displayName = currentProperty.Name;
-                }
+        //        if (currentProperty.GetCustomAttribute<DisplayAttribute>() != null)
+        //        {
+        //            displayName = currentProperty.GetCustomAttribute<DisplayAttribute>().Name;
+        //        }
+        //        else
+        //        {
+        //            displayName = currentProperty.Name;
+        //        }
 
-                newProp.PropertyName = currentProperty.Name;
-                newProp.DisplayName = displayName;
-                if (currentProperty.PropertyType.Name == "List`1")
-                {
-                    newProp.DisplayProperty = false;
-                }
-                else
-                {
-                    newProp.DisplayProperty = true;
-                }
+        //        newProp.PropertyName = currentProperty.Name;
+        //        newProp.DisplayName = displayName;
+        //        if (currentProperty.PropertyType.Name == "List`1")
+        //        {
+        //            newProp.DisplayProperty = false;
+        //        }
+        //        else
+        //        {
+        //            newProp.DisplayProperty = true;
+        //        }
 
-                // do not display Id in view list
-                if (currentProperty.Name == "Id")
-                {
-                    newProp.DisplayProperty = false;
-                }
+        //        // do not display Id in view list
+        //        if (currentProperty.Name == "Id")
+        //        {
+        //            newProp.DisplayProperty = false;
+        //        }
 
-                if (currentProperty.Name.Contains("Id"))
-                {
-                    newProp.DisplayProperty = false;
-                }
+        //        if (currentProperty.Name.Contains("Id"))
+        //        {
+        //            newProp.DisplayProperty = false;
+        //        }
 
-                propertyList.Add(newProp);
-            }
-            model.PropertyNames = propertyList;
+        //        propertyList.Add(newProp);
+        //    }
+        //    model.PropertyNames = propertyList;
 
-            var allData = db.Set<T>().ToList();
-            model.TotalDataListSize = allData.Count;
-            var modelData = allData.Skip(postModel.Skip).Take(postModel.Number).ToList();
+        //    var allData = db.Set<T>().ToList();
+        //    model.TotalDataListSize = allData.Count;
+        //    var modelData = allData.Skip(postModel.Skip).Take(postModel.Number).ToList();
 
-            List<ViewListModel> listModel = new List<ViewListModel>();
-            var ViewModelProps = typeof(ViewListModel).GetProperties();
+        //    List<ViewListModel> listModel = new List<ViewListModel>();
+        //    var ViewModelProps = typeof(ViewListModel).GetProperties();
 
-            foreach (var currentRow in modelData)
-            {
-                var currentRowProps = currentRow.GetType().GetProperties();
-                var addModel = new ViewListModel();
+        //    foreach (var currentRow in modelData)
+        //    {
+        //        var currentRowProps = currentRow.GetType().GetProperties();
+        //        var addModel = new ViewListModel();
 
-                foreach (var modelProperty in currentRowProps)
-                {
-                    foreach (var otherProperty in ViewModelProps)
-                    {
-                        if (modelProperty.Name == otherProperty.Name)
-                        { 
-                                    otherProperty.SetValue(addModel, modelProperty.GetValue(currentRow));                                  
-                            }
-                        }                
-                }
-                listModel.Add(addModel);
-            }
-            model.DataList = listModel;
+        //        foreach (var modelProperty in currentRowProps)
+        //        {
+        //            foreach (var otherProperty in ViewModelProps)
+        //            {
+        //                if (modelProperty.Name == otherProperty.Name)
+        //                { 
+        //                            otherProperty.SetValue(addModel, modelProperty.GetValue(currentRow));                                  
+        //                    }
+        //                }                
+        //        }
+        //        listModel.Add(addModel);
+        //    }
+        //    model.DataList = listModel;
 
-            return model;
-        }
+        //    return model;
+        //}
 
         public virtual ActionResult DisplayList(DisplayDataListPostModel postModel)
         {
             // using manually created service to replace method in this abstract class
             // var model = GetListData();
-            var model = _reactFrameWorkService.GetListData(postModel.Skip, postModel.Number);
+            var model = _reactFrameWorkService.GetListData(postModel);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 

@@ -62,6 +62,7 @@ namespace SuperBob.Service
     {
         public int Skip { get; set; }
         public int Number { get; set; }
-        public string Filter { get; set; }
+        public int FilterId { get; set; }
+        public string FilterProperty { get; set; }
     }
 }

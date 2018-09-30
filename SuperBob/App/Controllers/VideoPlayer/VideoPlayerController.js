@@ -7,15 +7,48 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
 
     $scope.showVideoList = true;
     $scope.showPlayer = false;
+    $scope.showPlayList = false;
     $scope.videoData = [];
     $scope.playListId = 0;
     $scope.deleteId = 0;
     $scope.currentVideoPlaying = 0;
-
+    $scope.bob = 14;
     $scope.videoPLayList = [{ Id: 0, PlayListName: '' }];
+    $scope.hideList = true;
 
     var x = window.innerWidth - 22;
     var y = window.innerHeight - 155;
+
+    $scope.buttonModel = {
+        buttonData:
+            [
+            { title: 'Add', class: 'btn sharedbutton-edit', show: true },
+            { title: 'Delete', class: 'btn sharedbutton-delete', show: false }],
+        buttonClickFunction: function (rowIndex, buttonIndex) {
+            //console.log(rowIndex)
+            //console.log(buttonIndex)
+            return {
+                action: 'toggle',
+                button1: 0,
+                button2: 1
+            };
+        }
+    };
+
+    $scope.filterModel = {  
+        filterStartId: 0,
+        filterList: [],
+        filterPropertyName: 'CatagoryId',
+        listUrl: '/VideoLibrary/GetGenreList',
+        getModelPropertyName: 'CatagoryList',
+        CustomFilterList: [{
+            Id: 0, Name: 'Show PlayList', Custom: true, hideShowList: false,executeFunction: function (data) {
+                //console.log(data)
+                $scope.showPlayList = true;
+                $scope.hideList = false;
+            }
+        }]
+    };
 
     $http({
         url: "/VideoPlayer/GetPLayLists",
@@ -44,10 +77,10 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
 
     $scope.playListChanged = function () {
         $scope.getPlayList($scope.playListId);
-    }
+    };
 
     $scope.playVideo = function (index) {
-
+        
         $scope.showVideoList = false;
         $scope.showPlayer = true;
         $scope.player;
@@ -61,6 +94,8 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
                 if (cId < $scope.videoData.length) {
                     $scope.player.src("/Videos/" + $scope.videoData[cId].FileName);
                     $scope.currentVideoPlaying = cId;
+                    console.log($scope.videoData[cId].FileName)
+                    console.log($scope.videoData)
                 } else {
                     $scope.showVideoList = true;
                     $scope.showPlayer = false;
@@ -78,7 +113,7 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
 
     $scope.addPlayList = function () {
         inputModelService.InputData($scope.savePlayList, "Enter Playlist Name");
-    }
+    };
 
     $scope.savePlayList = function (playlistName) {
         
@@ -96,24 +131,26 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
     }
 
     $scope.addVideo = function () {
-        $http({
-            url: "/VideoPlayer/GetVideoLibrary",
-            method: 'get'
-        }).then(function (response) {
-            console.log(response)
-            var videoList = [];
-            for (i = 0; i < response.data.length; i++) {
-                videoList.push({ Id: response.data[i].Id, Text: response.data[i].Title });
-            }
-            inputModelService.dropDownData($scope.addVideoSave, "Enter Playlist Name", videoList);
-        })
-    }
+        $scope.hideList = true;
+        $scope.showPlayList = false;
+        //$http({
+        //    url: "/VideoPlayer/GetVideoLibrary",
+        //    method: 'get'
+        //}).then(function (response) {
+        //    console.log(response)
+        //    var videoList = [];
+        //    for (i = 0; i < response.data.length; i++) {
+        //        videoList.push({ Id: response.data[i].Id, Text: response.data[i].Title });
+        //    }
+        //    inputModelService.dropDownData($scope.addVideoSave, "Enter Playlist Name", videoList);
+        //});
+    };
 
     $scope.addVideoSave = function (index) {
         var model = {
             PlayListId: $scope.playListId,
             LibraryId: index
-        }
+        };
         console.log($scope.playListId)
         $http({
             url: '/VideoPlayer/AddPlayListVideo',
@@ -121,15 +158,15 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
             data: model
         }).then(function (response) {
             $scope.videoData.push(response.data.AddedVideo)
-            
-        })
-    }   
+
+        });
+    };   
 
     $scope.deleteVideo = function (index) {
         $scope.deleteId = index;
         yesNoPopupService.YesNoPopup($scope.comfirmDeleteVideo);
-        
-    }
+
+    };
 
     $scope.comfirmDeleteVideo = function () {
         console.log($scope.deleteId)

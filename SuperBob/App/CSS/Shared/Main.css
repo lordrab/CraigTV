@@ -17,6 +17,7 @@
     color: #ffffff;
     padding: 2px;
     min-width: 50px;
+    margin-right: 20px;
 }
 .sharedbutton:focus {    
     background-color: #0f6c96;
@@ -40,6 +41,7 @@
     color: #ffffff;
     padding: 2px;
     min-width: 50px;
+    margin-right: 20px;
 }
 .sharedbutton-delete:hover {
     height: 28px;
@@ -64,6 +66,7 @@
     color: #ffffff;
     padding: 2px;
     min-width: 50px;
+    margin-right: 20px;
 }
 .sharedbutton-edit:hover {
     height: 28px;
@@ -92,3 +95,5 @@
 .shared-table {
     margin-top: 20px;
 }
+
+

@@ -21,6 +21,7 @@
           <Property Name="Method" Type="nchar" MaxLength="50" Nullable="false" />
           <Property Name="Error" Type="nchar" MaxLength="200" Nullable="false" />
           <Property Name="OtherInfo" Type="nchar" MaxLength="200" />
+          <Property Name="ErrorDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Genre">
           <Key>
@@ -573,6 +574,7 @@
           <Property Name="Method" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
           <Property Name="Error" Type="String" Nullable="false" MaxLength="200" FixedLength="true" Unicode="true" />
           <Property Name="OtherInfo" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+          <Property Name="ErrorDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -691,6 +693,7 @@
           <EntitySetMapping Name="ErrorLogs">
             <EntityTypeMapping TypeName="SuperBobModel.ErrorLog">
               <MappingFragment StoreEntitySet="ErrorLog">
+                <ScalarProperty Name="ErrorDate" ColumnName="ErrorDate" />
                 <ScalarProperty Name="OtherInfo" ColumnName="OtherInfo" />
                 <ScalarProperty Name="Error" ColumnName="Error" />
                 <ScalarProperty Name="Method" ColumnName="Method" />

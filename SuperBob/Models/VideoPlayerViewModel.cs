@@ -51,7 +51,7 @@ namespace SuperBob.Models
     public class VideoPlayerPLayLists
     {
         public int Id { get; set; }
-        public string PlayListName { get; set; }
+        public string Name { get; set; }
     }
 
     public class VideoPLayerAddLibrary
