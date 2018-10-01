@@ -22,17 +22,28 @@ app.controller("videoPlayerCtrl", function ($scope, $http, $uibModal, $compile, 
     $scope.buttonModel = {
         buttonData:
             [
-            { title: 'Add', class: 'btn sharedbutton-edit', show: true },
-            { title: 'Delete', class: 'btn sharedbutton-delete', show: false }],
-        buttonClickFunction: function (rowIndex, buttonIndex) {
-            //console.log(rowIndex)
-            //console.log(buttonIndex)
-            return {
-                action: 'toggle',
-                button1: 0,
-                button2: 1
-            };
-        }
+                {
+                    title: 'Add', class: 'btn sharedbutton-edit', show: true, buttonClickFunction: function (rowIndex, buttonIndex) {
+                        console.log(rowIndex)
+                        console.log(buttonIndex)
+                        return {
+                            action: 'toggle',
+                            button1: 0,
+                            button2: 1
+                        };
+                    }              
+                },
+                {
+                    title: 'Delete', class: 'btn sharedbutton-delete', show: false, buttonClickFunction: function (rowIndex, buttonIndex) {
+                        console.log(rowIndex)
+                        console.log(buttonIndex)
+                        return {
+                            action: 'toggle',
+                            button1: 1,
+                            button2: 0
+                        };
+                    }
+                }]         
     };
 
     $scope.filterModel = {  

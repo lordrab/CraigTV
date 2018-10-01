@@ -38,9 +38,12 @@
                 <button class="btn sharedbutton-delete" ng-click="DeleteRecord(row.Id.value,$index)">Delete</button>
                 </div>
                 <div ng-show="showCustomButtons" >
-                <div data-ng-repeat="b in row.buttonData.buttonData">
+                <div>
                     <div class="col-sm-3">
-                    <button ng-class="b.class" ng-click="customButton($parent.$index,$index)" ng-show="b.show">{{b.title}}</button>
+                    <button ng-class="row.buttonModel[0].class" ng-click="customButton($index,0)" ng-show="row.buttonModel[0].show">{{row.buttonModel[0].title}}</button>
+                    </div>
+                    <div class="col-sm-3">
+                    <button ng-class="row.buttonModel[1].class" ng-click="customButton($index,1)" ng-show="row.buttonModel[1].show">{{row.buttonModel[1].title}}</button>
                     </div>
                 </div>
                 </div>
@@ -136,18 +139,14 @@
             }
 
             $scope.customButton = function (rowIndex, buttonIndex) {
-                var returnData = $scope.rowData[rowIndex].buttonData.buttonClickFunction(rowIndex, buttonIndex, $scope.rowData);
-                console.log(rowIndex)
-                console.log($scope.rowData[rowIndex]);
-                console.log($scope.rowData.length)
+                var returnData = $scope.rowData[rowIndex].buttonModel[buttonIndex].buttonClickFunction(rowIndex, buttonIndex, $scope.rowData);
+                console.log(returnData)                
                 switch (returnData.action) {
                     case 'toggle':
-                        //console.log($scope.rowData[rowIndex].buttonData.buttonData[returnData.button1])
-                        //console.log(buttonIndex)
-                        $scope.rowData[rowIndex].buttonData.buttonData[returnData.button1].title = "ddd";
+                        $scope.rowData[rowIndex].buttonModel[returnData.button1].show = false;
+                        $scope.rowData[rowIndex].buttonModel[returnData.button2].show = true;
                         break;
-                }
-                //console.log($scope.rowData)
+                }                
             };
 
             $scope.setPagationArray = function (dataSize) {
@@ -270,21 +269,28 @@
 
             $scope.createListModel = function (data, index) {
                 var model = {};
-
-                var jim = Object.create($scope.customButtonModel);
+                cModelData = $scope.customButtonModel;
+                
+                var buttonModel = [];
+                for (b = 0; b < cModelData.buttonData.length; b++) {
+                    buttonModel.push({
+                        show: cModelData.buttonData[b].show,
+                        class: cModelData.buttonData[b].class,
+                        title: cModelData.buttonData[b].title,
+                        buttonClickFunction: cModelData.buttonData[b].buttonClickFunction
+                });                
+                };                
                 
                 if (typeof (index) === 'undefined') {
+                    
                     for (p = 0; p < $scope.propertyNames.length; p++) {
                         var value = data[$scope.propertyNames[p].PropertyName];
                         model[$scope.propertyNames[p].PropertyName] = {
                             value: value,
                             display: $scope.propertyNames[p].DisplayProperty
-                        };
-                        if (typeof($scope.customButtonModel) != 'undefined') {
-                            model.buttonData = jim;
-                        }
+                        };                       
                     }
-                    
+                    model.buttonModel = buttonModel;
                     $scope.rowData.push(model);
                 } else {
 
@@ -294,9 +300,9 @@
                         if (typeof ($scope.rowData[index][totalProps[i]]) != 'undefined') {
                             $scope.rowData[index][totalProps[i]].value = data[totalProps[i]];
                         }
-                        if (typeof ($scope.customButtonModel) != 'undefined') {
-                            $scope.rowData[index].buttonData = $scope.customButtonModel;
-                        }
+                        //if (typeof ($scope.customButtonModel) != 'undefined') {
+                        //    $scope.rowData[index].buttonData = $scope.customButtonModel;
+                        //}
                     }
                 }                
             };
